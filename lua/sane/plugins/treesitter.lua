@@ -1,0 +1,176 @@
+return {
+  "nvim-treesitter/nvim-treesitter-textobjects",
+  {
+    "windwp/nvim-ts-autotag",
+    config = true,
+    event = "BufReadPost",
+    ft = {
+      "html",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "svelte",
+      "vue",
+      "tsx",
+      "jsx",
+      "rescript",
+      "xml",
+      "php",
+      "markdown",
+      "glimmer",
+      "handlebars",
+      "hbs",
+    },
+  },
+  { "nvim-treesitter/playground", cmd = "TSPlaygroundToggle" },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "BufReadPre",
+    config = true,
+  },
+  {
+    "mfussenegger/nvim-treehopper",
+    keys = {
+      {
+        "m",
+        [[:<C-U>lua require('tsht').nodes()<CR>]],
+        mode = "o",
+      },
+      {
+        "m",
+        [[:lua require('tsht').nodes()<CR>]],
+        mode = "x",
+      },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = "<cmd>TSUpdate<cr>",
+    event = "BufReadPost",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = "all",
+        ignore_install = { "comment" },
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+          },
+        },
+        indent = { enable = true },
+        context_commentstring = {
+          enable = true,
+          enable_autocmd = false,
+        },
+        playground = {
+          enable = true,
+        },
+        query_linter = {
+          enable = true,
+          use_virtual_text = true,
+          lint_events = { "BufWrite", "CursorHold" },
+        },
+        textobjects = {
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]m"] = "@function.outer",
+              ["]]"] = "@class.outer",
+            },
+            goto_next_end = {
+              ["]M"] = "@function.outer",
+              ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[m"] = "@function.outer",
+              ["[["] = "@class.outer",
+            },
+            goto_previous_end = {
+              ["[M"] = "@function.outer",
+              ["[]"] = "@class.outer",
+            },
+            goto_next = {
+              ["]d"] = "@conditional.outer",
+            },
+            goto_previous = {
+              ["[d"] = "@conditional.outer",
+            },
+          },
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+              ["ab"] = "@block.outer",
+              ["ib"] = "@block.inner",
+            },
+          },
+        },
+      }
+      local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+    end,
+  },
+  {
+    "simrat39/symbols-outline.nvim",
+    keys = { { "<F4>", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
+    config = true,
+  },
+  {
+    "ckolkey/ts-node-action",
+    dependencies = { "nvim-treesitter" },
+    keys = {
+      {
+        "L",
+        function()
+          local action = require("ts-node-action.actions").cycle_case()[1][1]
+          local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
+          vim.lsp.buf.rename(action(node))
+        end,
+        desc = "Apply cycle_case node action via LSP Rename",
+      },
+    },
+    config = true,
+  },
+  {
+    "bennypowers/nvim-regexplainer",
+    dependencies = { "nui.nvim" },
+    keys = "gE",
+    opts = {
+      mappings = {
+        toggle = "gE",
+      },
+      -- filetypes (i.e. extensions) in which to run the autocommand
+      filetypes = {
+        "html",
+        "js",
+        "cjs",
+        "mjs",
+        "ts",
+        "jsx",
+        "tsx",
+        "cjsx",
+        "mjsx",
+        "rs",
+        "c",
+        "cc",
+        "cpp",
+        "h",
+        "pl",
+      },
+    },
+  },
+}
