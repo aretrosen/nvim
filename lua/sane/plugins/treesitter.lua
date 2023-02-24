@@ -119,6 +119,7 @@ return {
           "tsx",
           "typescript",
           "verilog",
+          "vim",
           "wgsl",
           "wgsl_bevy",
           "yaml",
