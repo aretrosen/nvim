@@ -42,6 +42,7 @@ return {
           "ltex",
           "marksman",
           -- "texlab",
+          "perlnavigator",
           "pyright",
           -- "solang",
           "svelte",
@@ -64,54 +65,6 @@ return {
 
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = "rounded",
-      })
-
-      vim.fn.sign_define("LightBulbSign", { text = "💡" })
-      vim.b.lightbulb = nil
-
-      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-        group = vim.api.nvim_create_augroup("LightBulb", {}),
-        desc = "Code Action Indicator",
-        callback = function()
-          local bufnr = vim.api.nvim_get_current_buf()
-          local code_action_cap_found = false
-          for _, client in pairs(vim.lsp.get_active_clients { bufnr = bufnr }) do
-            if client and client.supports_method "textDocument/codeAction" then
-              code_action_cap_found = true
-              break
-            end
-          end
-          if not code_action_cap_found then
-            return
-          end
-          local params = vim.lsp.util.make_range_params()
-          params.context =
-            { diagnostics = vim.diagnostic.get(bufnr, { lnum = params.range.start.line }) }
-          vim.lsp.buf_request_all(bufnr, "textDocument/codeAction", params, function(responses)
-            local new_line = params.range.start.line + 1
-            local has_actions = false
-            for _, response in pairs(responses) do
-              if response.result and not vim.tbl_isempty(response.result) then
-                has_actions = true
-                break
-              end
-            end
-            if vim.b.lightbulb then
-              vim.fn.sign_unplace("lsp_lightbulb", { id = vim.b.lightbulb, buffer = bufnr })
-              vim.b.lightbulb = nil
-            end
-            if has_actions and vim.b.lightbulb ~= new_line then
-              vim.fn.sign_place(
-                new_line,
-                "lsp_lightbulb",
-                "LightBulbSign",
-                bufnr,
-                { lnum = new_line, priority = 10 }
-              )
-              vim.b.lightbulb = new_line
-            end
-          end)
-        end,
       })
 
       local custom_attach = function(client, bufnr)
@@ -299,6 +252,24 @@ return {
 
       lspcfg["tailwindcss"].setup {
         on_attach = custom_attach,
+        filetypes = {
+          "astro",
+          "astro-markdown",
+          "eelixir",
+          "elixir",
+          "html",
+          "html-eex",
+          "heex",
+          "css",
+          "scss",
+          "javascript",
+          "javascriptreact",
+          "rescript",
+          "typescript",
+          "typescriptreact",
+          "vue",
+          "svelte",
+        },
         capabilities = cmp_capabilities,
       }
 
@@ -450,7 +421,6 @@ return {
         "black",
         "isort",
         "gofumpt",
-        "perlnavigator",
         "prettierd",
         "shellharden",
         "shfmt",
@@ -468,17 +438,20 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = "BufReadPre",
-    dependencies = { "mason.nvim", "typescript.nvim", "ts-node-action" },
+    dependencies = {
+      "mason.nvim",
+      "typescript.nvim", --[[ "ts-node-action"  ]]
+    },
     config = function()
       local nls = require "null-ls"
-      nls.register {
-        name = "more_actions",
-        method = { nls.methods.CODE_ACTION },
-        filetypes = { "_all" },
-        generator = {
-          fn = require("ts-node-action").available_actions,
-        },
-      }
+      -- nls.register {
+      --   name = "more_actions",
+      --   method = { nls.methods.CODE_ACTION },
+      --   filetypes = { "_all" },
+      --   generator = {
+      --     fn = require("ts-node-action").available_actions,
+      --   },
+      -- }
       nls.setup {
         debounce = 150,
         sources = {
@@ -514,6 +487,11 @@ return {
       },
     },
     opts = { use_diagnostic_signs = true },
+  },
+  {
+    dir = "~/.config/nvim/lua_plugins/lightbulb.nvim",
+    event = "VeryLazy",
+    config = true,
   },
   "simrat39/rust-tools.nvim",
   "p00f/clangd_extensions.nvim",

@@ -1,3 +1,5 @@
+local M = {}
+
 local sudo_write = function()
   local tmpfile = vim.fn.tempname()
   local filepath = vim.fn.expand "%"
@@ -38,8 +40,12 @@ local sudo_write = function()
   end
 end
 
-vim.api.nvim_create_user_command(
-  "W",
-  sudo_write,
-  { desc = "Write to file with proper permissions, preserve on error." }
-)
+M.setup = function()
+  vim.api.nvim_create_user_command(
+    "W",
+    sudo_write,
+    { desc = "Write to file with proper permissions, preserve on error." }
+  )
+end
+
+return M

@@ -24,6 +24,7 @@ require("lazy").setup("sane.plugins", {
   defaults = { lazy = true },
   diff = { cmd = "terminal_git" },
   install = { colorscheme = { "catppuccin", "habamax" } },
+  dev = { path = "~/.config/nvim/lua_plugins" },
   checker = { enabled = true },
   performance = {
     rtp = {
@@ -44,4 +45,3 @@ require("lazy").setup("sane.plugins", {
 
 require "aretro.autocmds"
 require "aretro.keymaps"
-require "aretro.sudo_write"

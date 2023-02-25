@@ -1,5 +1,6 @@
 return {
   { "tpope/vim-repeat", event = "VeryLazy" },
+  { "tpope/vim-sleuth", event = "VeryLazy" },
   {
     "tpope/vim-characterize",
     keys = "ga",
@@ -153,6 +154,11 @@ return {
   },
   "nvim-lua/plenary.nvim",
   { "famiu/bufdelete.nvim", event = "VeryLazy" },
+  {
+    dir = "~/.config/nvim/lua_plugins/sudowrite.nvim",
+    event = "VeryLazy",
+    config = true,
+  },
   {
     "sQVe/sort.nvim",
     cmd = "Sort",
