@@ -2,3 +2,4 @@ nvim
 lua
 json
 perl
+neovim

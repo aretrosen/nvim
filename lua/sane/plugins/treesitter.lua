@@ -201,22 +201,22 @@ return {
     keys = { { "<F4>", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
     config = true,
   },
-  -- {
-  --   "ckolkey/ts-node-action",
-  --   dependencies = { "nvim-treesitter" },
-  --   keys = {
-  --     {
-  --       "L",
-  --       function()
-  --         local action = require("ts-node-action.actions").cycle_case()[1][1]
-  --         local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
-  --         vim.lsp.buf.rename(action(node))
-  --       end,
-  --       desc = "Apply cycle_case node action via LSP Rename",
-  --     },
-  --   },
-  --   config = true,
-  -- },
+  {
+    "ckolkey/ts-node-action",
+    dependencies = { "nvim-treesitter" },
+    keys = {
+      {
+        "L",
+        function()
+          local action = require("ts-node-action.actions").cycle_case()[1][1]
+          local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
+          vim.lsp.buf.rename(action(node))
+        end,
+        desc = "Apply cycle_case node action via LSP Rename",
+      },
+    },
+    config = true,
+  },
   {
     "bennypowers/nvim-regexplainer",
     dependencies = { "nui.nvim" },

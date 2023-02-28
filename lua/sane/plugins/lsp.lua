@@ -11,13 +11,14 @@ return {
       "rust-tools.nvim",
       "b0o/SchemaStore.nvim",
       "barreiroleo/ltex-extra.nvim",
+      "yaml-companion.nvim",
       -- "haskell-tools.nvim",
       "typescript.nvim",
       {
         "j-hui/fidget.nvim",
         opts = {
           window = {
-            blend = 0,
+            blend = 10,
           },
         },
       },
@@ -51,7 +52,7 @@ return {
           "taplo",
           "jsonls",
           "wgsl_analyzer",
-          -- "yamlls",
+          "yamlls",
         },
       }
 
@@ -73,6 +74,9 @@ return {
             group = vim.api.nvim_create_augroup("LspFormatting." .. bufnr, {}),
             buffer = bufnr,
             callback = function()
+              if vim.b[bufnr].nofmt then
+                return
+              end
               local have_nls = #require("null-ls.sources").get_available(
                 vim.bo[bufnr].filetype,
                 "NULL_LS_FORMATTING"
@@ -81,7 +85,10 @@ return {
                 bufnr = bufnr,
                 timeout_ms = 2000,
                 filter = function(cli)
-                  return have_nls and cli.name == "null-ls"
+                  if have_nls then
+                    return cli.name == "null-ls"
+                  end
+                  return cli.name ~= "null-ls"
                 end,
               }
             end,
@@ -106,6 +113,11 @@ return {
         buf_map("gI", "<cmd>Telescope lsp_implementations<cr>", "LSP Implementation")
         buf_map("gr", "<cmd>Telescope lsp_references<cr>", "LSP References")
         buf_map("<leader>D", "<cmd>Telescope lsp_type_definitions<cr>", "LSP Type Definitions")
+        buf_map("<leader>tf", function()
+          local buf = vim.api.nvim_get_current_buf()
+          vim.b[buf].nofmt = not vim.b[buf].nofmt
+          vim.notify("Formatting on Save: " .. tostring(not vim.b[buf].nofmt), vim.log.levels.INFO)
+        end, "Toggle autoformatting")
         buf_map(
           "<leader>ca",
           vim.lsp.buf.code_action,
@@ -278,6 +290,13 @@ return {
         capabilities = cmp_capabilities,
       }
 
+      lspcfg["yamlls"].setup(require("yaml-companion").setup {
+        lspconfig = {
+          on_attach = custom_attach,
+          capabilities = cmp_capabilities,
+        },
+      })
+
       lspcfg["gopls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -400,8 +419,8 @@ return {
           settings = {
             cmd = {
               "clangd",
+              "--completion-style=detailed",
               "--background-index",
-              "--suggest-missing-includes",
               "--clang-tidy",
               "--header-insertion=iwyu",
             },
@@ -415,6 +434,7 @@ return {
     cmd = "Mason",
     config = function()
       local ensure_installed = {
+        "ansible-lint",
         "eslint_d",
         "shellcheck",
         "flake8",
@@ -440,18 +460,19 @@ return {
     event = "BufReadPre",
     dependencies = {
       "mason.nvim",
-      "typescript.nvim", --[[ "ts-node-action"  ]]
+      "typescript.nvim",
+      "ts-node-action",
     },
     config = function()
       local nls = require "null-ls"
-      -- nls.register {
-      --   name = "more_actions",
-      --   method = { nls.methods.CODE_ACTION },
-      --   filetypes = { "_all" },
-      --   generator = {
-      --     fn = require("ts-node-action").available_actions,
-      --   },
-      -- }
+      nls.register {
+        name = "more_actions",
+        method = { nls.methods.CODE_ACTION },
+        filetypes = { "_all" },
+        generator = {
+          fn = require("ts-node-action").available_actions,
+        },
+      }
       nls.setup {
         debounce = 150,
         sources = {

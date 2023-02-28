@@ -69,7 +69,7 @@ o.undofile = true
 
 -- window options
 o.breakindentopt:append { "min:20", "shift:2" }
-o.colorcolumn = "81"
+o.colorcolumn = "+1"
 o.cursorline = true
 o.foldnestmax = 5
 o.foldmethod = "indent"

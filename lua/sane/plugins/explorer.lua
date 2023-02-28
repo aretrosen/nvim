@@ -90,6 +90,18 @@ return {
   { "ThePrimeagen/git-worktree.nvim" },
   { "smartpde/telescope-recent-files" },
   {
+    "someone-stole-my-name/yaml-companion.nvim",
+    keys = {
+      {
+        "<leader>ys",
+        function()
+          require("yaml-companion").open_ui_select()
+        end,
+        desc = "Select yaml schema",
+      },
+    },
+  },
+  {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
