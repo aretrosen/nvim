@@ -1,5 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
+  "HiPhish/nvim-ts-rainbow2",
   {
     "windwp/nvim-ts-autotag",
     config = true,
@@ -136,6 +137,11 @@ return {
             scope_incremental = "grc",
             node_decremental = "grm",
           },
+        },
+        rainbow = {
+          enable = true,
+          query = "rainbow-parens",
+          strategy = require "ts-rainbow.strategy.global",
         },
         indent = { enable = true },
         context_commentstring = {

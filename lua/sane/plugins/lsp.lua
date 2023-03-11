@@ -465,14 +465,6 @@ return {
     },
     config = function()
       local nls = require "null-ls"
-      nls.register {
-        name = "more_actions",
-        method = { nls.methods.CODE_ACTION },
-        filetypes = { "_all" },
-        generator = {
-          fn = require("ts-node-action").available_actions,
-        },
-      }
       nls.setup {
         debounce = 150,
         sources = {

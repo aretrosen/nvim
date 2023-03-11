@@ -4,7 +4,6 @@ return {
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
@@ -105,7 +104,6 @@ return {
         sources = {
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "nvim_lsp_signature_help" },
           { name = "buffer" },
           { name = "path" },
           { name = "lua-latex-symbols", option = { cache = true } },
