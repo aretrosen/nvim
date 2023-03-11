@@ -444,7 +444,6 @@ return {
         "prettierd",
         "shellharden",
         "shfmt",
-        "stylua",
       }
       local mr = require "mason-registry"
       for _, tool in ipairs(ensure_installed) do
