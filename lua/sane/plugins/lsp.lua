@@ -33,7 +33,7 @@ return {
           "ansiblels",
           -- "astro",
           "bashls",
-          "cmake",
+          "neocmake",
           "elixirls",
           "gopls",
           -- "golangci_lint_ls",
@@ -147,7 +147,12 @@ return {
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
       vim.diagnostic.config {
-        virtual_text = { spacing = 4, source = "if_many", prefix = "●" },
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+          severity = vim.diagnostic.severity.ERROR,
+        },
         severity_sort = true,
         float = { border = "rounded", source = "if_many" },
       }
@@ -191,7 +196,7 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      lspcfg["cmake"].setup {
+      lspcfg["neocmake"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }

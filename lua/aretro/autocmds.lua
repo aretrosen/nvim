@@ -38,7 +38,7 @@ au("TermOpen", {
 })
 
 au("FileType", {
-  pattern = { "qf", "help", "man", "lspinfo", "tsplayground", "notify", "checkhealth" },
+  pattern = { "qf", "help", "man", "lspinfo", "tsplayground", "notify", "checkhealth", "oil" },
   group = grp,
   callback = function(event)
     vim.bo[event.buf].buflisted = false

@@ -20,68 +20,25 @@ return {
     config = true,
   },
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    cmd = "Neotree",
+    "stevearc/oil.nvim",
+    cmd = "Oil",
     keys = {
       {
         "<F2>",
         function()
-          require("neo-tree.command").execute {
-            toggle = true,
-          }
+          require("oil").open_float()
         end,
-        desc = "Explorer NeoTree (cwd)",
+        desc = "Oil File Explorer",
       },
     },
-    deactivate = function()
-      vim.cmd [[Neotree close]]
-    end,
-    init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-      if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0))
-        if stat and stat.type == "directory" then
-          require "neo-tree"
-        end
-      end
-    end,
     opts = {
-      close_if_last_window = true,
-      name = { trailing_slash = true },
-      source_selector = {
-        winbar = true,
+      columns = {
+        "icon",
+        "permissions",
       },
-      filesystem = {
-        components = {
-          harpoon_index = function(config, node, _)
-            local Marked = require "harpoon.mark"
-            local path = node:get_id()
-            local succuss, index = pcall(Marked.get_index_of, path)
-            if succuss and index and index > 0 then
-              return {
-                text = string.format(" ⥤ %d", index),
-                highlight = config.highlight or "NeoTreeDirectoryIcon",
-              }
-            else
-              return {}
-            end
-          end,
-        },
-        renderers = {
-          file = {
-            { "icon" },
-            { "name", use_git_status_colors = true },
-            { "harpoon_index" },
-            { "diagnostics" },
-            { "git_status", highlight = "NeoTreeDimText" },
-          },
-        },
-        bind_to_cwd = true,
-        cwd_target = {
-          sidebar = "tab",
-          current = "window",
-        },
-        follow_current_file = true,
+      skip_confirm_for_simple_edits = true,
+      view_options = {
+        show_hidden = true,
       },
     },
   },
@@ -89,6 +46,10 @@ return {
   { "nvim-telescope/telescope-project.nvim" },
   { "ThePrimeagen/git-worktree.nvim" },
   { "smartpde/telescope-recent-files" },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    config = true,
+  },
   {
     "someone-stole-my-name/yaml-companion.nvim",
     keys = {
@@ -155,6 +116,14 @@ return {
           }
         end,
         desc = "Grep in Files (root)",
+      },
+      {
+        "<leader>rr",
+        function()
+          require("telescope").extensions.refactoring.refactors()
+        end,
+        mode = "v",
+        desc = "Refactoring",
       },
       { "<leader>tb", "<cmd>Telescope buffers<cr>", desc = "Show Open Buffers" },
       { "<leader>th", "<cmd>Telescope help_tags<cr>", desc = "Telescope Help Tags" },
