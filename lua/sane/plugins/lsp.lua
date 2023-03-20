@@ -514,4 +514,14 @@ return {
   "p00f/clangd_extensions.nvim",
   "mrcjkb/haskell-tools.nvim",
   "jose-elias-alvarez/typescript.nvim",
+  {
+    "saecki/crates.nvim",
+    event = { "BufReadPost Cargo.toml" },
+    opts = {
+      null_ls = {
+        enabled = true,
+        name = "crates.nvim",
+      },
+    },
+  },
 }

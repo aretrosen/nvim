@@ -28,7 +28,7 @@ return {
         function()
           require("oil").open_float()
         end,
-        desc = "Oil File Explorer",
+        desc = "Oil File Explorer (cwd)",
       },
     },
     opts = {

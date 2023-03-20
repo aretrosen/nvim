@@ -161,6 +161,14 @@ return {
           { name = "lua-latex-symbols", option = { cache = true } },
         }),
       })
+
+      vim.api.nvim_create_autocmd("BufReadPost", {
+        group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),
+        pattern = "Cargo.toml",
+        callback = function()
+          cmp.setup.buffer { sources = { { name = "crates" } } }
+        end,
+      })
     end,
   },
   {
