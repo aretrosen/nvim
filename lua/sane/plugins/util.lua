@@ -1,6 +1,7 @@
 return {
   { "tpope/vim-repeat", event = "VeryLazy" },
   { "tpope/vim-sleuth", event = "VeryLazy" },
+  { "gpanders/editorconfig.nvim", event = "VeryLazy" },
   { "kevinhwang91/nvim-bqf", ft = "qf" },
   {
     "tpope/vim-characterize",

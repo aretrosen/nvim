@@ -1,7 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       { "folke/neodev.nvim", config = true },
@@ -35,6 +35,7 @@ return {
           "bashls",
           "neocmake",
           "elixirls",
+          "eslint",
           "gopls",
           -- "golangci_lint_ls",
           "html",
@@ -68,73 +69,7 @@ return {
         border = "rounded",
       })
 
-      local custom_attach = function(client, bufnr)
-        if client.supports_method "textDocument/formatting" then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = vim.api.nvim_create_augroup("LspFormatting." .. bufnr, {}),
-            buffer = bufnr,
-            callback = function()
-              if vim.b[bufnr].nofmt then
-                return
-              end
-              local have_nls = #require("null-ls.sources").get_available(
-                vim.bo[bufnr].filetype,
-                "NULL_LS_FORMATTING"
-              ) > 0
-              vim.lsp.buf.format {
-                bufnr = bufnr,
-                timeout_ms = 2000,
-                filter = function(cli)
-                  if have_nls then
-                    return cli.name == "null-ls"
-                  end
-                  return cli.name ~= "null-ls"
-                end,
-              }
-            end,
-          })
-        end
-
-        if client.supports_method "textDocument/documentSymbol" then
-          require("nvim-navic").attach(client, bufnr)
-        end
-
-        local buf_map = function(key, func, desc, opts)
-          opts = opts or {}
-          opts.mode = opts.mode or "n"
-          if not opts.has or client.server_capabilities[opts.has .. "Provider"] then
-            vim.keymap.set(opts.mode, key, func, { silent = true, buffer = bufnr, desc = desc })
-          end
-        end
-        buf_map("gD", vim.lsp.buf.declaration, "LSP Declaration")
-        buf_map("gd", "<cmd>Telescope lsp_definitions<cr>", "LSP Definition")
-        buf_map("K", vim.lsp.buf.hover, "LSP Hover")
-        buf_map("gK", vim.lsp.buf.signature_help, "LSP Signature Help", { has = "signatureHelp" })
-        buf_map("gI", "<cmd>Telescope lsp_implementations<cr>", "LSP Implementation")
-        buf_map("gr", "<cmd>Telescope lsp_references<cr>", "LSP References")
-        buf_map("<leader>D", "<cmd>Telescope lsp_type_definitions<cr>", "LSP Type Definitions")
-        buf_map("<leader>tf", function()
-          local buf = vim.api.nvim_get_current_buf()
-          vim.b[buf].nofmt = not vim.b[buf].nofmt
-          vim.notify("Formatting on Save: " .. tostring(not vim.b[buf].nofmt), vim.log.levels.INFO)
-        end, "Toggle autoformatting")
-        buf_map(
-          "<leader>ca",
-          vim.lsp.buf.code_action,
-          "LSP Code Actions",
-          { mode = { "n", "v" }, has = "codeAction" }
-        )
-        vim.keymap.set("n", "<leader>rn", function()
-          return ":IncRename " .. vim.fn.expand "<cword>"
-        end, {
-          desc = "LSP Incremental Rename",
-          expr = true,
-          buffer = bufnr,
-        })
-        buf_map("<leader>ld", vim.diagnostic.open_float, "Line Diagnostics")
-        buf_map("[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
-        buf_map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
-      end
+      local custom_attach = require("sane.plugins.lsp.attach").on_attach
 
       local diag_ico = {
         Error = " ",
@@ -151,10 +86,10 @@ return {
           spacing = 4,
           source = "if_many",
           prefix = "●",
-          severity = vim.diagnostic.severity.ERROR,
+          severity = { min = vim.diagnostic.severity.WARN },
         },
         severity_sort = true,
-        float = { border = "rounded", source = "if_many" },
+        float = { border = "rounded", source = "always" },
       }
 
       local lspcfg = require "lspconfig"
@@ -206,6 +141,29 @@ return {
         capabilities = cmp_capabilities,
       }
 
+      lspcfg["eslint"].setup {
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            callback = function(event)
+              if require("lspconfig.util").get_active_client_by_name(event.buf, "eslint") then
+                vim.cmd "EslintFixAll"
+              end
+            end,
+          })
+          custom_attach(client, bufnr)
+        end,
+        capabilities = cmp_capabilities,
+        settings = {
+          experimental = {
+            useFlatConfig = true,
+          },
+          packageManager = "pnpm",
+          workingDirectory = {
+            mode = "auto",
+          },
+        },
+      }
+
       lspcfg["html"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -214,13 +172,18 @@ return {
       lspcfg["ltex"].setup {
         on_attach = function(client, bufnr)
           require("ltex_extra").setup {
-            load_langs = { "es-AR", "en-US" },
+            load_langs = { "es", "en-US" },
             init_check = true,
             path = vim.fn.stdpath "config" .. "/dictionaries",
           }
           custom_attach(client, bufnr)
         end,
         capabilities = cmp_capabilities,
+        setting = {
+          ltex = {
+            diagnosticSeverity = "warning",
+          },
+        },
       }
 
       lspcfg["marksman"].setup {
@@ -440,9 +403,7 @@ return {
     config = function()
       local ensure_installed = {
         "ansible-lint",
-        "eslint_d",
         "shellcheck",
-        "flake8",
         "black",
         "isort",
         "gofumpt",
@@ -451,32 +412,36 @@ return {
         "shfmt",
       }
       local mr = require "mason-registry"
-      for _, tool in ipairs(ensure_installed) do
-        local ok, p = pcall(mr.get_package, tool)
-        if ok and not p:is_installed() then
-          p:install()
+      local installer = function()
+        for _, tool in ipairs(ensure_installed) do
+          local ok, p = pcall(mr.get_package, tool)
+          if ok and not p:is_installed() then
+            p:install()
+          end
         end
+      end
+      if mr.refresh then
+        mr.refresh(installer)
+      else
+        installer()
       end
     end,
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    event = "BufReadPre",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "mason.nvim",
       "typescript.nvim",
-      "ts-node-action",
     },
     config = function()
       local nls = require "null-ls"
       nls.setup {
         debounce = 150,
+        on_attach = require("sane.plugins.lsp.attach").on_attach,
         sources = {
-          nls.builtins.diagnostics.eslint_d,
-          nls.builtins.code_actions.eslint_d,
           nls.builtins.diagnostics.shellcheck,
           nls.builtins.code_actions.shellcheck,
-          nls.builtins.diagnostics.flake8,
           nls.builtins.formatting.black,
           nls.builtins.formatting.isort,
           nls.builtins.formatting.prettierd,

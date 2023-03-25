@@ -45,6 +45,7 @@ return {
             },
           },
           lualine_b = {
+            { "overseer" },
             {
               "filetype",
               icon_only = true,

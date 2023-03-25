@@ -16,6 +16,20 @@ return {
         end,
         desc = "Harpoon quick menu",
       },
+      {
+        "<leader>hn",
+        function()
+          require("harpoon.ui").nav_next()
+        end,
+        desc = "Harpoon go to next file",
+      },
+      {
+        "<leader>hp",
+        function()
+          require("harpoon.ui").nav_prev()
+        end,
+        desc = "Harpoon go to prev file",
+      },
     },
     config = true,
   },
@@ -39,6 +53,10 @@ return {
       skip_confirm_for_simple_edits = true,
       view_options = {
         show_hidden = true,
+        is_always_hidden = function(name, bufnr)
+          local dontshow = { "node_modules" }
+          return vim.tbl_contains(dontshow, name)
+        end,
       },
     },
   },

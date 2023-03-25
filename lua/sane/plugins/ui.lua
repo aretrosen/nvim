@@ -1,6 +1,13 @@
 return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
+  {
+    "andymass/vim-matchup",
+    event = "BufReadPost",
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+    end,
+  },
   "folke/twilight.nvim",
   {
     "folke/zen-mode.nvim",
