@@ -19,6 +19,13 @@ vim.opt.runtimepath:prepend(lazypath)
 -- setting neovim options
 require "aretro.options"
 
+-- setting filetypes
+vim.filetype.add {
+  pattern = {
+    [".*playbook%.ya?ml"] = "yaml.ansible",
+  },
+}
+
 -- configuring lazy.nvim
 require("lazy").setup("sane.plugins", {
   defaults = { lazy = true },

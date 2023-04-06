@@ -19,6 +19,13 @@ local check_code_action_availabilty = function(bufnr)
   return false
 end
 
+local remove_lightbulb = function(bufnr)
+  if M.lightbulb then
+    npcall(api.nvim_buf_clear_namespace, bufnr, M.ns, M.lightbulb, M.lightbulb + 1)
+    M.lightbulb = nil
+  end
+end
+
 M.setup = function(opts)
   opts = opts or {}
   opts = vim.tbl_extend("force", default_opts, opts)
@@ -32,6 +39,7 @@ M.setup = function(opts)
     callback = function()
       local bufnr = vim.api.nvim_get_current_buf()
       if not M.code_action_capability or not vim.lsp.get_client_by_id(M.code_action_capability) then
+        remove_lightbulb(bufnr)
         if not check_code_action_availabilty(bufnr) then
           return
         end
@@ -42,11 +50,7 @@ M.setup = function(opts)
       params.context = { diagnostics = vim.diagnostic.get(bufnr, { lnum = new_line }) }
 
       vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
-        if M.lightbulb then
-          npcall(api.nvim_buf_clear_namespace, bufnr, M.ns, M.lightbulb, M.lightbulb + 1)
-          M.lightbulb = nil
-        end
-
+        remove_lightbulb(bufnr)
         local has_actions = false
 
         for _, response in pairs(responses) do

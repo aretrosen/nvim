@@ -46,8 +46,6 @@ return {
           -- "texlab",
           "perlnavigator",
           "pyright",
-          -- "solang",
-          "svelte",
           -- "svlangserver",
           "tailwindcss",
           "taplo",
@@ -179,7 +177,7 @@ return {
           custom_attach(client, bufnr)
         end,
         capabilities = cmp_capabilities,
-        setting = {
+        settings = {
           ltex = {
             diagnosticSeverity = "warning",
           },
@@ -202,11 +200,6 @@ return {
             perlcriticEnabled = true,
           },
         },
-      }
-
-      lspcfg["svelte"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
       }
 
       lspcfg["taplo"].setup {
@@ -248,7 +241,6 @@ return {
           "typescript",
           "typescriptreact",
           "vue",
-          "svelte",
         },
         capabilities = cmp_capabilities,
       }

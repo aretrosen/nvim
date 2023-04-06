@@ -13,7 +13,6 @@ M.on_attach = function(client, bufnr)
           vim.bo[bufnr].filetype,
           "NULL_LS_FORMATTING"
         ) > 0
-        print(have_nls)
         vim.lsp.buf.format {
           bufnr = bufnr,
           timeout_ms = 1000,
