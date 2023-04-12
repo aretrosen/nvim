@@ -36,3 +36,10 @@ map("n", "<A-s>", "<cmd>silent %y+<cr>", { silent = true })
 
 map("v", ">", ">gv")
 map("v", "<", "<gv")
+
+map("t", "<esc>", [[<C-\><C-n>]])
+map("t", "<C-h>", "<cmd>wincmd h<cr>")
+map("t", "<C-j>", "<cmd>wincmd j<cr>")
+map("t", "<C-k>", "<cmd>wincmd k<cr>")
+map("t", "<C-l>", "<cmd>wincmd l<cr>")
+map("t", "<C-w>", [[<C-\><C-n><C-w>]])

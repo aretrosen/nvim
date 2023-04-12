@@ -5,6 +5,7 @@ return {
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       { "folke/neodev.nvim", config = true },
+      { "smjonas/inc-rename.nvim", cmd = "IncRename", config = true },
       "nvim-navic",
       "mason.nvim",
       "clangd_extensions.nvim",

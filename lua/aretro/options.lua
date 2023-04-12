@@ -15,8 +15,7 @@ o.fillchars = { eob = " ", fold = " " }
 o.foldlevelstart = 1
 o.grepformat = "%f:%l:%c:%m"
 o.grepprg = "rg --vimgrep --no-heading --smart-case --hidden"
-o.ignorecase = false
-o.inccommand = "nosplit"
+o.ignorecase = true
 o.laststatus = 3
 o.listchars = {
   tab = "» ",
@@ -48,8 +47,8 @@ o.splitright = true
 o.switchbuf = "useopen"
 o.termguicolors = true
 o.timeoutlen = 350
-o.ttimeoutlen = 10
-o.updatetime = 100
+o.ttimeoutlen = 20
+o.updatetime = 150
 o.virtualedit = "block"
 o.wildmode = "longest:full,full"
 o.winminwidth = 5
@@ -78,7 +77,7 @@ o.list = true
 o.number = true
 o.relativenumber = true
 o.signcolumn = "yes"
-o.wrap = false
+o.wrap = true
 -- statuscolumn
 
 -- custom decorations

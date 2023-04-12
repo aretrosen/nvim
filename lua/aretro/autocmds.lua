@@ -42,6 +42,6 @@ au("FileType", {
   group = grp,
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    vim.keymap.set("n", "q", "<cmd>xit<cr>", { buffer = event.buf, silent = true })
   end,
 })

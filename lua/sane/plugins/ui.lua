@@ -1,26 +1,6 @@
 return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
-  {
-    "andymass/vim-matchup",
-    event = "BufReadPost",
-    config = function()
-      vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
-    end,
-  },
-  "folke/twilight.nvim",
-  {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode",
-    opts = {
-      plugins = {
-        gitsigns = { enabled = true },
-        tmux = { enabled = true },
-        kitty = { enabled = false, font = "+2" },
-      },
-    },
-    keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
-  },
   { "uga-rosa/ccc.nvim", cmd = "CccPick" },
   {
     "rcarriga/nvim-notify",
@@ -59,11 +39,6 @@ return {
       show_current_context = true,
       show_current_context_start = true,
     },
-  },
-  {
-    "smjonas/inc-rename.nvim",
-    cmd = "IncRename",
-    config = true,
   },
   {
     "stevearc/dressing.nvim",
@@ -136,72 +111,5 @@ return {
         },
       },
     },
-  },
-  {
-    "barrett-ruth/import-cost.nvim",
-    ft = { "javascriptreact", "typescriptreact" },
-    build = "sh install.sh pnpm",
-    config = true,
-  },
-  {
-    "sindrets/diffview.nvim",
-    cmd = {
-      "DiffviewOpen",
-      "DiffviewClose",
-      "DiffviewToggleFiles",
-      "DiffviewFocusFiles",
-    },
-    keys = { { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "DiffView" } },
-    config = true,
-  },
-  {
-    "monaqa/dial.nvim",
-    keys = {
-      { "<C-a>", mode = { "n", "v" } },
-      { "<C-x>", mode = { "n", "v" } },
-      { "g<C-a>", mode = "v" },
-      { "g<C-x>", mode = "v" },
-    },
-    config = function()
-      local augend = require "dial.augend"
-      require("dial.config").augends:register_group {
-        default = {
-          augend.constant.alias.Alpha,
-          augend.constant.alias.alpha,
-          augend.constant.alias.bool,
-          augend.date.alias["%H:%M"],
-          augend.date.alias["%H:%M:%S"],
-          augend.date.alias["%Y-%m-%d"],
-          augend.integer.alias.binary,
-          augend.integer.alias.decimal_int,
-          augend.integer.alias.hex,
-          augend.integer.alias.octal,
-          augend.semver.alias.semver,
-          augend.hexcolor.new {
-            case = "lower",
-          },
-          augend.date.new {
-            pattern = "%-I:%M %p",
-            default_kind = "min",
-            only_valid = true,
-          },
-          augend.date.new {
-            pattern = "%B:%-d, %Y",
-            default_kind = "day",
-            clamp = false,
-            end_sensitive = true,
-            only_valid = true,
-          },
-        },
-      }
-      local map = vim.keymap.set
-      local dialmap = require "dial.map"
-      map("n", "<C-a>", dialmap.inc_normal(), { noremap = true })
-      map("n", "<C-x>", dialmap.dec_normal(), { noremap = true })
-      map("v", "<C-a>", dialmap.inc_visual(), { noremap = true })
-      map("v", "<C-x>", dialmap.dec_visual(), { noremap = true })
-      map("v", "g<C-a>", dialmap.inc_gvisual(), { noremap = true })
-      map("v", "g<C-x>", dialmap.dec_gvisual(), { noremap = true })
-    end,
   },
 }

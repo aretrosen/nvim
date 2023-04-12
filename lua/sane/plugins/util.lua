@@ -1,17 +1,10 @@
 return {
   { "tpope/vim-repeat", event = "VeryLazy" },
-  { "tpope/vim-sleuth", event = "VeryLazy" },
-  { "gpanders/editorconfig.nvim", event = "VeryLazy" },
   { "kevinhwang91/nvim-bqf", ft = "qf" },
   {
     "tpope/vim-characterize",
     keys = "ga",
   },
-  {
-    "ojroques/nvim-osc52",
-    event = "VeryLazy",
-  },
-  { "chaoren/vim-wordmotion", event = "VeryLazy" },
   {
     "tzachar/local-highlight.nvim",
     ft = { "python", "cpp", "c", "rust" },
@@ -89,33 +82,6 @@ return {
     },
   },
   {
-    "numToStr/FTerm.nvim",
-    cmd = "Gitui",
-    keys = {
-      {
-        "<A-t>",
-        [[<cmd>lua require("FTerm").toggle()<cr>]],
-        desc = "Toggle FTerm",
-      },
-      {
-        "<A-t>",
-        [[<c-\><c-n><cmd>lua require("FTerm").toggle()<cr>]],
-        mode = "t",
-        desc = "Toggle FTerm",
-      },
-    },
-    config = function()
-      local fterm = require "FTerm"
-      local gitui = fterm:new {
-        ft = "fterm_gitui",
-        cmd = "gitui",
-      }
-      vim.api.nvim_create_user_command("Gitui", function()
-        gitui:toggle()
-      end, { desc = "Open Gitui" })
-    end,
-  },
-  {
     "toppair/peek.nvim",
     build = "deno task --quiet build:fast",
     ft = "markdown",
@@ -160,9 +126,5 @@ return {
     dir = "~/.config/nvim/lua_plugins/sudowrite.nvim",
     event = "VeryLazy",
     config = true,
-  },
-  {
-    "sQVe/sort.nvim",
-    cmd = "Sort",
   },
 }

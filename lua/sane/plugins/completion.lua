@@ -66,15 +66,18 @@ return {
           documentation = cmp.config.window.bordered(),
         },
         formatting = {
+          fields = { "kind", "abbr", "menu" },
           format = function(entry, item)
             item = require("tailwindcss-colorizer-cmp").formatter(entry, item)
-            item.kind = string.format("%s %s", kind_icons[item.kind], item.kind:lower())
-            item.menu = ({
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              luasnip = "[LuaSnip]",
-              latex_symbols = "[LaTeX]",
-            })[entry.source.name]
+            local icon = kind_icons[item.kind] or "???"
+            local src = ({
+              buffer = "[buf]",
+              nvim_lsp = "[lsp]",
+              luasnip = "[snip]",
+              latex_symbols = "[tex]",
+            })[entry.source.name] or ""
+            item.menu = string.format("%s %s", "(" .. item.kind:lower() .. ")", src)
+            item.kind = icon
             return item
           end,
         },
