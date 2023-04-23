@@ -26,27 +26,28 @@ return {
       "cmp-nvim-lsp",
     },
     config = function()
-      require("mason").setup()
       require("mason-lspconfig").setup {
         ensure_installed = {
-          "awk_ls",
           "ansiblels",
           "astro",
+          "awk_ls",
           "bashls",
-          "neocmake",
           "elixirls",
           "eslint",
           "gopls",
           "html",
-          "tsserver",
-          "lua_ls",
-          "ltex",
-          "texlab",
-          "perlnavigator",
-          "pyright",
-          "verible",
-          "tailwindcss",
           "jsonls",
+          "ltex",
+          "lua_ls",
+          "neocmake",
+          "perlnavigator",
+          "prismals",
+          "pyright",
+          "ruff_lsp",
+          "tailwindcss",
+          "texlab",
+          "tsserver",
+          "verible",
           "wgsl_analyzer",
           "yamlls",
         },
@@ -89,6 +90,11 @@ return {
 
       local lspcfg = require "lspconfig"
 
+      lspcfg["ansiblels"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
       lspcfg["astro"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -99,276 +105,9 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      lspcfg["ansiblels"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["lua_ls"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = "Replace",
-            },
-            runtime = {
-              version = "LuaJIT",
-            },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-          },
-        },
-      }
-
       lspcfg["bashls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
-      }
-
-      lspcfg["neocmake"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["elixirls"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["eslint"].setup {
-        on_attach = function(client, bufnr)
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            callback = function(event)
-              if require("lspconfig.util").get_active_client_by_name(event.buf, "eslint") then
-                vim.cmd "EslintFixAll"
-              end
-            end,
-          })
-          custom_attach(client, bufnr)
-        end,
-        capabilities = cmp_capabilities,
-        settings = {
-          experimental = {
-            useFlatConfig = true,
-          },
-          packageManager = "pnpm",
-          workingDirectory = {
-            mode = "auto",
-          },
-        },
-      }
-
-      lspcfg["html"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["ltex"].setup {
-        on_attach = function(client, bufnr)
-          require("ltex_extra").setup {
-            load_langs = { "es", "en-US" },
-            init_check = true,
-            path = vim.fn.stdpath "config" .. "/dictionaries",
-          }
-          custom_attach(client, bufnr)
-        end,
-        capabilities = cmp_capabilities,
-        settings = {
-          ltex = {
-            diagnosticSeverity = "warning",
-          },
-        },
-      }
-
-      lspcfg["perlnavigator"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-        settings = {
-          perlnavigator = {
-            enableWarnings = true,
-            perltidyProfile = "",
-            perlcriticProfile = "",
-            perlcriticEnabled = true,
-          },
-        },
-      }
-
-      lspcfg["texlab"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-        settings = {
-          texlab = {
-            build = {
-              args = {
-                "-xelatex",
-                "-file-line-error",
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "%f",
-              },
-              forwardSearchAfter = true,
-              onSave = true,
-            },
-            chktex = {
-              onOpenAndSave = true,
-              onEdit = true,
-            },
-            forwardSearch = {
-              executable = "zathura",
-              args = {
-                "--synctex-forward",
-                "%l:1:%f",
-                "%p",
-              },
-            },
-          },
-        },
-      }
-
-      lspcfg["jsonls"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-        settings = {
-          json = {
-            schemas = require("schemastore").json.schemas(),
-            validate = { enable = true },
-          },
-        },
-      }
-
-      lspcfg["pyright"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["tailwindcss"].setup {
-        on_attach = custom_attach,
-        filetypes = {
-          "astro",
-          "astro-markdown",
-          "eelixir",
-          "elixir",
-          "html",
-          "html-eex",
-          "heex",
-          "css",
-          "scss",
-          "javascript",
-          "javascriptreact",
-          "rescript",
-          "typescript",
-          "typescriptreact",
-          "vue",
-        },
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["verible"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["wgsl_analyzer"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["yamlls"].setup(require("yaml-companion").setup {
-        lspconfig = {
-          on_attach = custom_attach,
-          capabilities = cmp_capabilities,
-        },
-      })
-
-      lspcfg["gopls"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-        init_options = {
-          usePlaceholders = true,
-        },
-        settings = {
-          gopls = {
-            allExperiments = true,
-            gofumpt = true,
-            analyses = {
-              unusedparams = true,
-              fieldalignment = true,
-              nilness = true,
-              shadow = true,
-            },
-            staticcheck = true,
-          },
-        },
-      }
-
-      require("typescript").setup {
-        server = {
-          on_attach = function(client, bufnr)
-            vim.keymap.set(
-              "n",
-              "<leader>co",
-              "TypescriptOrganizeImports",
-              { buffer = bufnr, desc = "Organize Imports" }
-            )
-            vim.keymap.set(
-              "n",
-              "<leader>cR",
-              "TypescriptRenameFile",
-              { desc = "Rename File", buffer = bufnr }
-            )
-            custom_attach(client, bufnr)
-          end,
-          capabilities = cmp_capabilities,
-        },
-      }
-
-      local rt = require "rust-tools"
-      rt.setup {
-        server = {
-          on_attach = function(client, bufnr)
-            vim.keymap.set(
-              "n",
-              "K",
-              rt.hover_actions.hover_actions,
-              { buffer = bufnr, desc = "Rust Hover Action" }
-            )
-            vim.keymap.set(
-              "n",
-              "<Leader>ca",
-              rt.code_action_group.code_action_group,
-              { buffer = bufnr, desc = "Rust Code Actions" }
-            )
-            custom_attach(client, bufnr)
-          end,
-          capabilities = cmp_capabilities,
-          cmd = { "rustup", "run", "nightly", "rust-analyzer" },
-          settings = {
-            ["rust-analyzer"] = {
-              rustfmt = { extraArgs = "+nightly" },
-              checkOnSave = {
-                command = "clippy",
-              },
-              imports = {
-                granularity = {
-                  group = "module",
-                },
-                prefix = "self",
-              },
-              cargo = {
-                allFeatures = true,
-              },
-              procMacro = {
-                enable = true,
-              },
-            },
-          },
-        },
       }
 
       require("clangd_extensions").setup {
@@ -416,6 +155,268 @@ return {
           },
         },
       }
+
+      lspcfg["elixirls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["eslint"].setup {
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            callback = function(event)
+              if require("lspconfig.util").get_active_client_by_name(event.buf, "eslint") then
+                vim.cmd "EslintFixAll"
+              end
+            end,
+          })
+          custom_attach(client, bufnr)
+        end,
+        capabilities = cmp_capabilities,
+        settings = {
+          experimental = {
+            useFlatConfig = true,
+          },
+          packageManager = "pnpm",
+          workingDirectory = {
+            mode = "auto",
+          },
+        },
+      }
+
+      lspcfg["gopls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        init_options = {
+          usePlaceholders = true,
+        },
+        settings = {
+          gopls = {
+            allExperiments = true,
+            gofumpt = true,
+            analyses = {
+              unusedparams = true,
+              fieldalignment = true,
+              nilness = true,
+              shadow = true,
+            },
+            staticcheck = true,
+          },
+        },
+      }
+
+      lspcfg["html"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["jsonls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        settings = {
+          json = {
+            schemas = require("schemastore").json.schemas(),
+            validate = { enable = true },
+          },
+        },
+      }
+
+      lspcfg["ltex"].setup {
+        on_attach = function(client, bufnr)
+          require("ltex_extra").setup {
+            load_langs = { "es", "en-US" },
+            init_check = true,
+            path = vim.fn.stdpath "config" .. "/dictionaries",
+          }
+          custom_attach(client, bufnr)
+        end,
+        capabilities = cmp_capabilities,
+        settings = {
+          ltex = {
+            diagnosticSeverity = "warning",
+          },
+        },
+      }
+
+      lspcfg["lua_ls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = "Replace",
+            },
+            runtime = {
+              version = "LuaJIT",
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            diagnostics = {
+              globals = { "vim" },
+            },
+          },
+        },
+      }
+
+      lspcfg["neocmake"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["perlnavigator"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        settings = {
+          perlnavigator = {
+            enableWarnings = true,
+            perltidyProfile = "",
+            perlcriticProfile = "",
+            perlcriticEnabled = true,
+          },
+        },
+      }
+
+      lspcfg["pyright"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      local rt = require "rust-tools"
+      rt.setup {
+        server = {
+          on_attach = function(client, bufnr)
+            vim.keymap.set(
+              "n",
+              "K",
+              rt.hover_actions.hover_actions,
+              { buffer = bufnr, desc = "Rust Hover Action" }
+            )
+            vim.keymap.set(
+              "n",
+              "<Leader>ca",
+              rt.code_action_group.code_action_group,
+              { buffer = bufnr, desc = "Rust Code Actions" }
+            )
+            custom_attach(client, bufnr)
+          end,
+          capabilities = cmp_capabilities,
+          cmd = { "rustup", "run", "nightly", "rust-analyzer" },
+          settings = {
+            ["rust-analyzer"] = {
+              rustfmt = { extraArgs = "+nightly" },
+              checkOnSave = {
+                command = "clippy",
+              },
+              imports = {
+                granularity = {
+                  group = "module",
+                },
+                prefix = "self",
+              },
+              cargo = {
+                allFeatures = true,
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+        },
+      }
+
+      lspcfg["tailwindcss"].setup {
+        on_attach = custom_attach,
+        filetypes = {
+          "astro",
+          "astro-markdown",
+          "eelixir",
+          "elixir",
+          "html",
+          "html-eex",
+          "heex",
+          "css",
+          "scss",
+          "javascript",
+          "javascriptreact",
+          "rescript",
+          "typescript",
+          "typescriptreact",
+          "vue",
+        },
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["texlab"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        settings = {
+          texlab = {
+            build = {
+              args = {
+                "-xelatex",
+                "-file-line-error",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "%f",
+              },
+              forwardSearchAfter = true,
+              onSave = true,
+            },
+            chktex = {
+              onOpenAndSave = true,
+              onEdit = true,
+            },
+            forwardSearch = {
+              executable = "zathura",
+              args = {
+                "--synctex-forward",
+                "%l:1:%f",
+                "%p",
+              },
+            },
+          },
+        },
+      }
+
+      require("typescript").setup {
+        server = {
+          on_attach = function(client, bufnr)
+            vim.keymap.set(
+              "n",
+              "<leader>co",
+              "TypescriptOrganizeImports",
+              { buffer = bufnr, desc = "Organize Imports" }
+            )
+            vim.keymap.set(
+              "n",
+              "<leader>cR",
+              "TypescriptRenameFile",
+              { desc = "Rename File", buffer = bufnr }
+            )
+            custom_attach(client, bufnr)
+          end,
+          capabilities = cmp_capabilities,
+        },
+      }
+
+      lspcfg["verible"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["wgsl_analyzer"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["yamlls"].setup(require("yaml-companion").setup {
+        lspconfig = {
+          on_attach = custom_attach,
+          capabilities = cmp_capabilities,
+        },
+      })
     end,
   },
   {
@@ -426,17 +427,17 @@ return {
         "ansible-lint",
         "shellcheck",
         "black",
-        "isort",
         "gofumpt",
         "prettierd",
         "shellharden",
         "shfmt",
       }
+      require("mason").setup()
       local mr = require "mason-registry"
       local installer = function()
         for _, tool in ipairs(ensure_installed) do
-          local ok, p = pcall(mr.get_package, tool)
-          if ok and not p:is_installed() then
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
             p:install()
           end
         end
@@ -461,9 +462,8 @@ return {
         debounce = 150,
         on_attach = require("sane.plugins.lsp.attach").on_attach,
         sources = {
-          nls.builtins.diagnostics.cppcheck,
+          -- nls.builtins.diagnostics.cppcheck,
           nls.builtins.formatting.black,
-          nls.builtins.formatting.isort,
           nls.builtins.formatting.prettierd,
           nls.builtins.formatting.shellharden,
           nls.builtins.formatting.shfmt,
