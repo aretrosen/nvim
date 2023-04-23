@@ -13,7 +13,6 @@ return {
       "b0o/SchemaStore.nvim",
       "barreiroleo/ltex-extra.nvim",
       "yaml-companion.nvim",
-      -- "haskell-tools.nvim",
       "typescript.nvim",
       {
         "j-hui/fidget.nvim",
@@ -32,24 +31,21 @@ return {
         ensure_installed = {
           "awk_ls",
           "ansiblels",
-          -- "astro",
+          "astro",
           "bashls",
           "neocmake",
           "elixirls",
           "eslint",
           "gopls",
-          -- "golangci_lint_ls",
           "html",
           "tsserver",
           "lua_ls",
           "ltex",
-          "marksman",
-          -- "texlab",
+          "texlab",
           "perlnavigator",
           "pyright",
-          -- "svlangserver",
+          "verible",
           "tailwindcss",
-          "taplo",
           "jsonls",
           "wgsl_analyzer",
           "yamlls",
@@ -92,6 +88,11 @@ return {
       }
 
       local lspcfg = require "lspconfig"
+
+      lspcfg["astro"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
 
       lspcfg["awk_ls"].setup {
         on_attach = custom_attach,
@@ -185,11 +186,6 @@ return {
         },
       }
 
-      lspcfg["marksman"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
       lspcfg["perlnavigator"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -203,9 +199,36 @@ return {
         },
       }
 
-      lspcfg["taplo"].setup {
+      lspcfg["texlab"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
+        settings = {
+          texlab = {
+            build = {
+              args = {
+                "-xelatex",
+                "-file-line-error",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "%f",
+              },
+              forwardSearchAfter = true,
+              onSave = true,
+            },
+            chktex = {
+              onOpenAndSave = true,
+              onEdit = true,
+            },
+            forwardSearch = {
+              executable = "zathura",
+              args = {
+                "--synctex-forward",
+                "%l:1:%f",
+                "%p",
+              },
+            },
+          },
+        },
       }
 
       lspcfg["jsonls"].setup {
@@ -243,6 +266,11 @@ return {
           "typescriptreact",
           "vue",
         },
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["verible"].setup {
+        on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
 
@@ -299,28 +327,6 @@ return {
           capabilities = cmp_capabilities,
         },
       }
-
-      -- local ht = require "haskell-tools"
-      -- ht.setup {
-      --   hls = {
-      --     on_attach = function(client, bufnr)
-      --       vim.keymap.set(
-      --         "n",
-      --         "<space>cl",
-      --         vim.lsp.codelens.run,
-      --         { silent = true, buffer = bufnr }
-      --       )
-      --       vim.keymap.set(
-      --         "n",
-      --         "<space>hs",
-      --         ht.hoogle.hoogle_signature,
-      --         { silent = true, buffer = bufnr }
-      --       )
-      --       custom_attach(client, bufnr)
-      --     end,
-      --     capabilities = cmp_capabilities,
-      --   },
-      -- }
 
       local rt = require "rust-tools"
       rt.setup {
@@ -387,6 +393,28 @@ return {
             },
           },
         },
+        extensions = {
+          ast = {
+            role_icons = {
+              type = "",
+              declaration = "",
+              expression = "",
+              specifier = "",
+              statement = "",
+              ["template argument"] = "",
+            },
+
+            kind_icons = {
+              Compound = "",
+              Recovery = "",
+              TranslationUnit = "",
+              PackExpansion = "",
+              TemplateTypeParm = "",
+              TemplateTemplateParm = "",
+              TemplateParamObject = "",
+            },
+          },
+        },
       }
     end,
   },
@@ -433,8 +461,7 @@ return {
         debounce = 150,
         on_attach = require("sane.plugins.lsp.attach").on_attach,
         sources = {
-          nls.builtins.diagnostics.shellcheck,
-          nls.builtins.code_actions.shellcheck,
+          nls.builtins.diagnostics.cppcheck,
           nls.builtins.formatting.black,
           nls.builtins.formatting.isort,
           nls.builtins.formatting.prettierd,
@@ -470,7 +497,6 @@ return {
   },
   "simrat39/rust-tools.nvim",
   "p00f/clangd_extensions.nvim",
-  "mrcjkb/haskell-tools.nvim",
   "jose-elias-alvarez/typescript.nvim",
   {
     "saecki/crates.nvim",
