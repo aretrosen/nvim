@@ -111,7 +111,7 @@ return {
       { "<leader>ht", "<cmd>Telescope help_tags<cr>", desc = "Telescope Help Tags" },
       { "<leader>bc", "<cmd>Telescope git_bcommits<CR>", desc = "Telescope Buffer Git Commits" },
       { "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "Telescope Git Commits" },
-      { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Telescope Git status" },
+      { "gs", "<cmd>Telescope git_status<CR>", desc = "Telescope Git status" },
       {
         "<leader>tm",
         function()

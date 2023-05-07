@@ -212,7 +212,34 @@ return {
   },
   {
     "ziontee113/syntax-tree-surfer",
-    event = "BufReadPost",
+    cmd = { "STSSelectParentNode", "STSSelectChildNode" },
+    keys = {
+      { "H", "<cmd>STSSelectParentNode<cr>", desc = "Select Parent Node", mode = "x" },
+      { "L", "<cmd>STSSelectChildNode<cr>", desc = "Select Child Node", mode = "x" },
+      {
+        "<leader>gs",
+        "<cmd>STSSwapOrHoldVisual<cr>",
+        desc = "Swap Currently Held Node",
+        mode = "x",
+      },
+      {
+        "go",
+        function()
+          require("syntax-tree-surfer").targeted_jump {
+            "function",
+            "arrow_function",
+            "if_statement",
+            "else_clause",
+            "else_statement",
+            "elseif_statement",
+            "for_statement",
+            "while_statement",
+            "switch_statement",
+          }
+        end,
+        desc = "Targeted Jump",
+      },
+    },
     config = true,
   },
   {
@@ -225,7 +252,7 @@ return {
     dependencies = { "nvim-treesitter" },
     keys = {
       {
-        "L",
+        "<leader>cc",
         function()
           local action = require("ts-node-action.actions").cycle_case()[1][1]
           local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
