@@ -211,6 +211,11 @@ return {
     end,
   },
   {
+    "ziontee113/syntax-tree-surfer",
+    event = "BufReadPost",
+    config = true,
+  },
+  {
     "simrat39/symbols-outline.nvim",
     keys = { { "<F4>", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
     config = true,

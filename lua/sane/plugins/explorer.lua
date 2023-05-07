@@ -152,4 +152,31 @@ return {
       telescope.load_extension "git_worktree"
     end,
   },
+  {
+    "stevearc/oil.nvim",
+    cmd = "Oil",
+    keys = {
+      {
+        "<F2>",
+        function()
+          require("oil").open_float()
+        end,
+        desc = "Oil File Explorer (cwd)",
+      },
+    },
+    opts = {
+      columns = {
+        "icon",
+        "permissions",
+      },
+      skip_confirm_for_simple_edits = true,
+      view_options = {
+        show_hidden = true,
+        is_always_hidden = function(name, _)
+          local dontshow = { "node_modules" }
+          return vim.tbl_contains(dontshow, name)
+        end,
+      },
+    },
+  },
 }

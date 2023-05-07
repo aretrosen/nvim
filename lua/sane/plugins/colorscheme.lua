@@ -24,7 +24,6 @@ return {
           cmp = true,
           gitsigns = true,
           harpoon = true,
-          leap = true,
           lsp_trouble = true,
           mason = true,
           symbols_outline = true,
@@ -44,10 +43,10 @@ return {
               information = { "undercurl" },
             },
           },
-          barbecue = {
-            dim_dirname = true,
+          dap = {
+            enabled = true,
+            enable_ui = true, -- enable nvim-dap-ui
           },
-          neotree = true,
           telescope = true,
           treesitter = true,
           treesitter_context = true,

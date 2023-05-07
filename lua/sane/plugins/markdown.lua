@@ -1,9 +1,10 @@
 return {
   {
     "iamcco/markdown-preview.nvim",
-    ft = "markdown",
-    run = function()
-      vim.fn["mkdp#util#install"]()
+    run = "cd app && pnpm import && pnpm install",
+    setup = function()
+      vim.g.mkdp_filetypes = { "markdown" }
     end,
+    ft = { "markdown" },
   },
 }

@@ -2,6 +2,21 @@ return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
   {
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    opts = {
+      render = function(props)
+        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+        return {
+          { icon, guifg = color },
+          { " " },
+          { filename, guifg = color },
+        }
+      end,
+    },
+  },
+  {
     "rcarriga/nvim-notify",
     opts = {
       timeout = 1500,
@@ -110,19 +125,6 @@ return {
           opts = { skip = true },
         },
       },
-    },
-  },
-  {
-    "asiryk/auto-hlsearch.nvim",
-    keys = { "/", "?", "*", "#", "n", "N" },
-    config = true,
-  },
-  {
-    "jinh0/eyeliner.nvim",
-    keys = { "f", "t", "F", "T" },
-    opts = {
-      highlight_on_key = true,
-      dim = true,
     },
   },
 }
