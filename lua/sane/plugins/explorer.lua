@@ -33,53 +33,17 @@ return {
     },
     config = true,
   },
-  {
-    "stevearc/oil.nvim",
-    cmd = "Oil",
-    keys = {
-      {
-        "<F2>",
-        function()
-          require("oil").open_float()
-        end,
-        desc = "Oil File Explorer (cwd)",
-      },
-    },
-    opts = {
-      columns = {
-        "icon",
-        "permissions",
-      },
-      skip_confirm_for_simple_edits = true,
-      view_options = {
-        show_hidden = true,
-        is_always_hidden = function(name, bufnr)
-          local dontshow = { "node_modules" }
-          return vim.tbl_contains(dontshow, name)
-        end,
-      },
-    },
-  },
   { "nvim-telescope/telescope-file-browser.nvim" },
   { "nvim-telescope/telescope-project.nvim" },
   { "ThePrimeagen/git-worktree.nvim" },
   { "smartpde/telescope-recent-files" },
-  {
-    "ThePrimeagen/refactoring.nvim",
-    config = true,
-  },
+  -- {
+  --   "ThePrimeagen/refactoring.nvim",
+  --   config = true,
+  -- },
   {
     "someone-stole-my-name/yaml-companion.nvim",
     ft = "yaml",
-    keys = {
-      {
-        "<leader>ys",
-        function()
-          require("yaml-companion").open_ui_select()
-        end,
-        desc = "Select yaml schema",
-      },
-    },
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -114,8 +78,6 @@ return {
         desc = "Telescope Projects",
       },
       { "<leader>km", "<cmd>Telescope keymaps<cr>", desc = "Show Available Keymaps" },
-      { "<leader>tc", "<cmd>Telescope commands<cr>", desc = "Show Available Commands" },
-      { "<leader>vo", "<cmd>Telescope vim_options<cr>", desc = "Vim Options" },
       {
         "<leader>/",
         function()
@@ -136,21 +98,22 @@ return {
         end,
         desc = "Grep in Files (root)",
       },
-      {
-        "<leader>rr",
-        function()
-          require("telescope").extensions.refactoring.refactors()
-        end,
-        mode = "v",
-        desc = "Refactoring",
-      },
+      -- {
+      --   "<leader>rr",
+      --   function()
+      --     require("telescope").load_extension "refactoring"
+      --     require("telescope").extensions.refactoring.refactors()
+      --   end,
+      --   mode = "v",
+      --   desc = "Refactoring",
+      -- },
       { "<leader>tb", "<cmd>Telescope buffers<cr>", desc = "Show Open Buffers" },
-      { "<leader>th", "<cmd>Telescope help_tags<cr>", desc = "Telescope Help Tags" },
+      { "<leader>ht", "<cmd>Telescope help_tags<cr>", desc = "Telescope Help Tags" },
       { "<leader>bc", "<cmd>Telescope git_bcommits<CR>", desc = "Telescope Buffer Git Commits" },
       { "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "Telescope Git Commits" },
       { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Telescope Git status" },
       {
-        "<leader>sM",
+        "<leader>tm",
         function()
           require("telescope.builtin").man_pages { sections = { "ALL" } }
         end,

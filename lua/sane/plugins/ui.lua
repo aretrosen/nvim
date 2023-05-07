@@ -1,7 +1,6 @@
 return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
-  { "uga-rosa/ccc.nvim", cmd = "CccPick" },
   {
     "rcarriga/nvim-notify",
     opts = {
@@ -111,6 +110,19 @@ return {
           opts = { skip = true },
         },
       },
+    },
+  },
+  {
+    "asiryk/auto-hlsearch.nvim",
+    keys = { "/", "?", "*", "#", "n", "N" },
+    config = true,
+  },
+  {
+    "jinh0/eyeliner.nvim",
+    keys = { "f", "t", "F", "T" },
+    opts = {
+      highlight_on_key = true,
+      dim = true,
     },
   },
 }

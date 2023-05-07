@@ -1,5 +1,4 @@
 local M = {}
-M.navic_once = true
 M.on_attach = function(client, bufnr)
   if client.supports_method "textDocument/formatting" then
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -25,11 +24,6 @@ M.on_attach = function(client, bufnr)
         }
       end,
     })
-  end
-
-  if M.navic_once and client.supports_method "textDocument/documentSymbol" then
-    M.navic_once = false
-    require("nvim-navic").attach(client, bufnr)
   end
 
   local buf_map = function(key, func, desc, opts)

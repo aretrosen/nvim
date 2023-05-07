@@ -16,6 +16,7 @@ return {
         "-fchar8_t",
         "-fcoroutines",
         "-flto",
+        "-fuse-ld=mold",
         "-fmodules-ts",
         "-pipe",
         "-pedantic",

@@ -4,9 +4,13 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "folke/neodev.nvim", config = true },
+      {
+        "folke/neodev.nvim",
+        opts = {
+          library = { plugins = { "nvim-dap-ui" }, types = true },
+        },
+      },
       { "smjonas/inc-rename.nvim", cmd = "IncRename", config = true },
-      "nvim-navic",
       "mason.nvim",
       "clangd_extensions.nvim",
       "rust-tools.nvim",
@@ -29,9 +33,11 @@ return {
       require("mason-lspconfig").setup {
         ensure_installed = {
           "ansiblels",
+          "asm_lsp",
           "astro",
           "awk_ls",
           "bashls",
+          "dockerls",
           "elixirls",
           "eslint",
           "gopls",
@@ -43,9 +49,9 @@ return {
           "perlnavigator",
           "prismals",
           "pyright",
-          "ruff_lsp",
           "tailwindcss",
-          "texlab",
+          "taplo",
+          -- "texlab",
           "tsserver",
           "verible",
           "wgsl_analyzer",
@@ -91,6 +97,11 @@ return {
       local lspcfg = require "lspconfig"
 
       lspcfg["ansiblels"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["asm_lsp"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
@@ -154,6 +165,11 @@ return {
             },
           },
         },
+      }
+
+      lspcfg["dockerls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
       }
 
       lspcfg["elixirls"].setup {
@@ -265,6 +281,11 @@ return {
         capabilities = cmp_capabilities,
       }
 
+      lspcfg["ocamllsp"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
       lspcfg["perlnavigator"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -278,7 +299,17 @@ return {
         },
       }
 
+      lspcfg["prismals"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
       lspcfg["pyright"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["ruff_lsp"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
@@ -348,37 +379,41 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      lspcfg["texlab"].setup {
+      lspcfg["taplo"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
-        settings = {
-          texlab = {
-            build = {
-              args = {
-                "-xelatex",
-                "-file-line-error",
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "%f",
-              },
-              forwardSearchAfter = true,
-              onSave = true,
-            },
-            chktex = {
-              onOpenAndSave = true,
-              onEdit = true,
-            },
-            forwardSearch = {
-              executable = "zathura",
-              args = {
-                "--synctex-forward",
-                "%l:1:%f",
-                "%p",
-              },
-            },
-          },
-        },
       }
+
+      -- lspcfg["texlab"].setup { on_attach = custom_attach,
+      --   capabilities = cmp_capabilities,
+      --   settings = {
+      --     texlab = {
+      --       build = {
+      --         args = {
+      --           "-xelatex",
+      --           "-file-line-error",
+      --           "-synctex=1",
+      --           "-interaction=nonstopmode",
+      --           "%f",
+      --         },
+      --         forwardSearchAfter = true,
+      --         onSave = true,
+      --       },
+      --       chktex = {
+      --         onOpenAndSave = true,
+      --         onEdit = true,
+      --       },
+      --       forwardSearch = {
+      --         executable = "zathura",
+      --         args = {
+      --           "--synctex-forward",
+      --           "%l:1:%f",
+      --           "%p",
+      --         },
+      --       },
+      --     },
+      --   },
+      -- }
 
       require("typescript").setup {
         server = {
@@ -417,6 +452,11 @@ return {
           capabilities = cmp_capabilities,
         },
       })
+
+      lspcfg["zls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
     end,
   },
   {
@@ -426,7 +466,6 @@ return {
       local ensure_installed = {
         "ansible-lint",
         "shellcheck",
-        "black",
         "gofumpt",
         "prettierd",
         "shellharden",
@@ -464,6 +503,8 @@ return {
         sources = {
           -- nls.builtins.diagnostics.cppcheck,
           nls.builtins.formatting.black,
+          -- nls.builtins.diagnostics.ruff,
+          -- nls.builtins.formatting.ruff,
           nls.builtins.formatting.prettierd,
           nls.builtins.formatting.shellharden,
           nls.builtins.formatting.shfmt,

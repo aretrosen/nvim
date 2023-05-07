@@ -61,7 +61,7 @@ return {
       {
         "<leader>ps",
         function()
-          require("persistence").load()
+          require("jersistence").load()
         end,
         desc = "Restore Session",
       },
@@ -82,46 +82,12 @@ return {
     },
   },
   {
-    "toppair/peek.nvim",
-    build = "deno task --quiet build:fast",
-    ft = "markdown",
-    keys = {
-      {
-        "<leader>mo",
-        function()
-          local peek = require "peek"
-          if peek.is_open() then
-            peek.close()
-          else
-            peek.open()
-          end
-        end,
-        desc = "Peek (Markdown Preview)",
-      },
-    },
-    opts = { theme = "light" },
-  },
-  {
     "RaafatTurki/hex.nvim",
     cmd = { "HexDump", "HexAssemble", "HexToggle" },
     config = true,
   },
   { "krady21/compiler-explorer.nvim", cmd = "CECompile" },
-  {
-    "jbyuki/nabla.nvim",
-    ft = { "tex", "text", "markdown" },
-    keys = {
-      {
-        "<leader>np",
-        function()
-          require("nabla").popup { border = "rounded" }
-        end,
-        desc = "Latex Expression Popup",
-      },
-    },
-  },
   "nvim-lua/plenary.nvim",
-  { "famiu/bufdelete.nvim", event = "VeryLazy" },
   {
     dir = "~/.config/nvim/lua_plugins/sudowrite.nvim",
     event = "VeryLazy",

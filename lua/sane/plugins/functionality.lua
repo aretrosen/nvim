@@ -44,19 +44,15 @@ return {
       map("v", "g<C-x>", dialmap.dec_gvisual(), { noremap = true })
     end,
   },
-  {
-    "sQVe/sort.nvim",
-    cmd = "Sort",
-  },
   { "chaoren/vim-wordmotion", event = "VeryLazy" },
   {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
   },
   {
-    "luukvbaal/statuscol.nvim",
+    "lewis6991/foldsigns.nvim",
     event = "VeryLazy",
-    opts = {},
+    config = true,
   },
   {
     "akinsho/toggleterm.nvim",
