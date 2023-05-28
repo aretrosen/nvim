@@ -47,15 +47,6 @@ return {
     },
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPost",
-    opts = {
-      filetype_exclude = { "help", "neo-tree", "Trouble", "lazy" },
-      show_current_context = true,
-      show_current_context_start = true,
-    },
-  },
-  {
     "stevearc/dressing.nvim",
     init = function()
       vim.ui.select = function(...)

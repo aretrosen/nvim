@@ -1,3 +1,18 @@
+local fn = vim.fn
+local ok, perlprefix = pcall(fn.system, { "plenv", "prefix" })
+local perlversion = ""
+if ok then
+  perlprefix = vim.trim(perlprefix)
+  perlversion = fn.fnamemodify(perlprefix, ":t")
+end
+
+local diag_ico = {
+  Error = " ",
+  Warn = " ",
+  Hint = "󰌵 ",
+  Info = " ",
+}
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -6,9 +21,7 @@ return {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       {
         "folke/neodev.nvim",
-        opts = {
-          library = { plugins = { "nvim-dap-ui" }, types = true },
-        },
+        config = true,
       },
       { "smjonas/inc-rename.nvim", cmd = "IncRename", config = true },
       "mason.nvim",
@@ -18,6 +31,7 @@ return {
       "barreiroleo/ltex-extra.nvim",
       "yaml-companion.nvim",
       "typescript.nvim",
+      "scalameta/nvim-metals",
       {
         "j-hui/fidget.nvim",
         opts = {
@@ -32,30 +46,30 @@ return {
     config = function()
       require("mason-lspconfig").setup {
         ensure_installed = {
-          "ansiblels",
-          "asm_lsp",
-          "astro",
-          "awk_ls",
-          "bashls",
-          "dockerls",
+          -- "asm_lsp",
+          -- "astro",
+          -- "awk_ls",
+          -- "bashls",
+          -- "dockerls",
           "elixirls",
-          "eslint",
-          "gopls",
-          "html",
-          "jsonls",
+          -- "eslint",
+          -- "gopls",
+          -- "html",
+          -- "jsonls",
           "ltex",
           "lua_ls",
-          "neocmake",
+          -- "neocmake",
           "perlnavigator",
-          "prismals",
-          "pyright",
-          "tailwindcss",
-          "taplo",
+          -- "prismals",
+          -- "pyright",
+          -- "ruff_lsp",
+          -- "tailwindcss",
+          -- "taplo",
           -- "texlab",
-          "tsserver",
+          -- "tsserver",
           "verible",
-          "wgsl_analyzer",
-          "yamlls",
+          -- "wgsl_analyzer",
+          -- "yamlls",
         },
       }
 
@@ -73,15 +87,9 @@ return {
 
       local custom_attach = require("sane.plugins.lsp.attach").on_attach
 
-      local diag_ico = {
-        Error = " ",
-        Warn = " ",
-        Hint = " ",
-        Info = " ",
-      }
       for name, icon in pairs(diag_ico) do
         name = "DiagnosticSign" .. name
-        vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
+        fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
       vim.diagnostic.config {
         virtual_text = {
@@ -242,7 +250,7 @@ return {
           require("ltex_extra").setup {
             load_langs = { "es", "en-US" },
             init_check = true,
-            path = vim.fn.stdpath "config" .. "/dictionaries",
+            path = fn.stdpath "config" .. "/dictionaries",
           }
           custom_attach(client, bufnr)
         end,
@@ -284,6 +292,9 @@ return {
       lspcfg["ocamllsp"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
+        get_language_id = function(_, ftype)
+          return ftype
+        end,
       }
 
       lspcfg["perlnavigator"].setup {
@@ -291,10 +302,15 @@ return {
         capabilities = cmp_capabilities,
         settings = {
           perlnavigator = {
+            perlPath = vim.trim(fn.system { "plenv", "which", "perl" }),
             enableWarnings = true,
             perltidyProfile = "",
             perlcriticProfile = "",
             perlcriticEnabled = true,
+            includePaths = {
+              perlprefix .. "/lib/perl5/" .. perlversion,
+              perlprefix .. "/lib/perl5/site_perl/" .. perlversion,
+            },
           },
         },
       }
@@ -304,7 +320,7 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      lspcfg["pyright"].setup {
+      lspcfg["pylyzer"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
@@ -384,36 +400,37 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      -- lspcfg["texlab"].setup { on_attach = custom_attach,
-      --   capabilities = cmp_capabilities,
-      --   settings = {
-      --     texlab = {
-      --       build = {
-      --         args = {
-      --           "-xelatex",
-      --           "-file-line-error",
-      --           "-synctex=1",
-      --           "-interaction=nonstopmode",
-      --           "%f",
-      --         },
-      --         forwardSearchAfter = true,
-      --         onSave = true,
-      --       },
-      --       chktex = {
-      --         onOpenAndSave = true,
-      --         onEdit = true,
-      --       },
-      --       forwardSearch = {
-      --         executable = "zathura",
-      --         args = {
-      --           "--synctex-forward",
-      --           "%l:1:%f",
-      --           "%p",
-      --         },
-      --       },
-      --     },
-      --   },
-      -- }
+      lspcfg["texlab"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        settings = {
+          texlab = {
+            build = {
+              args = {
+                "-xelatex",
+                "-file-line-error",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "%f",
+              },
+              forwardSearchAfter = true,
+              onSave = true,
+            },
+            chktex = {
+              onOpenAndSave = true,
+              onEdit = true,
+            },
+            forwardSearch = {
+              executable = "zathura",
+              args = {
+                "--synctex-forward",
+                "%l:1:%f",
+                "%p",
+              },
+            },
+          },
+        },
+      }
 
       require("typescript").setup {
         server = {
@@ -457,36 +474,29 @@ return {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
+
+      -- nvim-metals
+      local metals_config = require("metals").bare_config()
+      metals_config.on_attach = custom_attach
+
+      metals_config.settings = {
+        showImplicitArguments = true,
+        -- excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
+      }
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "scala", "sbt" },
+        callback = function()
+          require("metals").initialize_or_attach(metals_config)
+        end,
+        group = vim.api.nvim_create_augroup("nvim-metals", { clear = true }),
+      })
     end,
   },
   {
     "williamboman/mason.nvim",
     cmd = "Mason",
-    config = function()
-      local ensure_installed = {
-        "ansible-lint",
-        "shellcheck",
-        "gofumpt",
-        "prettierd",
-        "shellharden",
-        "shfmt",
-      }
-      require("mason").setup()
-      local mr = require "mason-registry"
-      local installer = function()
-        for _, tool in ipairs(ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(installer)
-      else
-        installer()
-      end
-    end,
+    config = true,
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
@@ -503,10 +513,11 @@ return {
         sources = {
           -- nls.builtins.diagnostics.cppcheck,
           nls.builtins.formatting.black,
-          -- nls.builtins.diagnostics.ruff,
-          -- nls.builtins.formatting.ruff,
           nls.builtins.formatting.prettierd,
           nls.builtins.formatting.shellharden,
+          -- HACK: bashls code_actions currently not working
+          nls.builtins.code_actions.shellcheck,
+          nls.builtins.diagnostics.shellcheck,
           nls.builtins.formatting.shfmt,
           nls.builtins.formatting.stylua,
           require "typescript.extensions.null-ls.code-actions",

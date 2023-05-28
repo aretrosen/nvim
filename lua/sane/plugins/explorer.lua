@@ -35,12 +35,13 @@ return {
   },
   { "nvim-telescope/telescope-file-browser.nvim" },
   { "nvim-telescope/telescope-project.nvim" },
+  { "imNel/monorepo.nvim", config = true },
   { "ThePrimeagen/git-worktree.nvim" },
   { "smartpde/telescope-recent-files" },
-  -- {
-  --   "ThePrimeagen/refactoring.nvim",
-  --   config = true,
-  -- },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    config = true,
+  },
   {
     "someone-stole-my-name/yaml-companion.nvim",
     ft = "yaml",
@@ -77,6 +78,13 @@ return {
         end,
         desc = "Telescope Projects",
       },
+      {
+        "<leader>tr",
+        function()
+          require("telescope").extensions.monorepo.monorepo()
+        end,
+        desc = "Telescope Projects",
+      },
       { "<leader>km", "<cmd>Telescope keymaps<cr>", desc = "Show Available Keymaps" },
       {
         "<leader>/",
@@ -98,15 +106,15 @@ return {
         end,
         desc = "Grep in Files (root)",
       },
-      -- {
-      --   "<leader>rr",
-      --   function()
-      --     require("telescope").load_extension "refactoring"
-      --     require("telescope").extensions.refactoring.refactors()
-      --   end,
-      --   mode = "v",
-      --   desc = "Refactoring",
-      -- },
+      {
+        "<leader>pr",
+        function()
+          require("telescope").load_extension "refactoring"
+          require("telescope").extensions.refactoring.refactors()
+        end,
+        mode = "v",
+        desc = "Refactoring",
+      },
       { "<leader>tb", "<cmd>Telescope buffers<cr>", desc = "Show Open Buffers" },
       { "<leader>ht", "<cmd>Telescope help_tags<cr>", desc = "Telescope Help Tags" },
       { "<leader>bc", "<cmd>Telescope git_bcommits<CR>", desc = "Telescope Buffer Git Commits" },

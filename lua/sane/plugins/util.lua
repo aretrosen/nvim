@@ -61,7 +61,7 @@ return {
       {
         "<leader>ps",
         function()
-          require("jersistence").load()
+          require("persistence").load()
         end,
         desc = "Restore Session",
       },
@@ -87,6 +87,13 @@ return {
     config = true,
   },
   { "krady21/compiler-explorer.nvim", cmd = "CECompile" },
+  {
+    "junegunn/vim-easy-align",
+    event = "VeryLazy",
+    keys = {
+      { "gA", "<Plug>(EasyAlign)", desc = "Vim Alignemnet", mode = { "n", "x" } },
+    },
+  },
   "nvim-lua/plenary.nvim",
   {
     dir = "~/.config/nvim/lua_plugins/sudowrite.nvim",

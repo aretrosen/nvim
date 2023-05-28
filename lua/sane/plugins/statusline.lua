@@ -85,7 +85,7 @@ return {
               symbols = {
                 error = " ",
                 warn = " ",
-                hint = " ",
+                hint = "󰌵 ",
                 info = " ",
               },
               on_click = function()

@@ -47,7 +47,11 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    build = "<cmd>TSUpdate<cr>",
+    build = ":TSUpdate",
+    dependencies = {
+      { "LiadOz/nvim-dap-repl-highlights", config = true },
+      { "tjdevries/ocaml.nvim", config = true },
+    },
     event = "BufReadPost",
     config = function()
       require("nvim-treesitter.configs").setup {
@@ -64,6 +68,7 @@ return {
           "css",
           "cuda",
           "diff",
+          "dap_repl",
           "dockerfile",
           "eex",
           "elixir",
@@ -117,7 +122,6 @@ return {
           "scss",
           "solidity",
           "sql",
-          "svelte",
           "terraform",
           "todotxt",
           "toml",
@@ -151,7 +155,6 @@ return {
           query = "rainbow-parens",
           strategy = require "ts-rainbow.strategy.global",
         },
-        indent = { enable = true },
         context_commentstring = {
           enable = true,
           enable_autocmd = false,

@@ -1,3 +1,4 @@
+local transparent = true
 return {
   {
     "catppuccin/nvim",
@@ -6,19 +7,14 @@ return {
     priority = 1000,
     config = function()
       require("catppuccin").setup {
-        transparent_background = true,
+        transparent_background = transparent,
+        dim_inactive = {
+          enabled = not transparent,
+        },
         styles = {
           comments = { "italic" },
           conditionals = { "italic" },
           functions = { "bold" },
-          keywords = {},
-          strings = {},
-          variables = {},
-          numbers = {},
-          booleans = {},
-          properties = {},
-          types = {},
-          operators = {},
         },
         integrations = {
           cmp = true,
@@ -52,12 +48,47 @@ return {
           treesitter_context = true,
           vimwiki = true,
           notify = true,
-          indent_blankline = {
-            enabled = true,
+        },
+      }
+      -- vim.cmd.colorscheme "catppuccin"
+    end,
+  },
+  {
+    "projekt0n/github-nvim-theme",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("github-theme").setup {
+        options = {
+          transparent = transparent,
+          dim_inactive = not transparent,
+          styles = {
+            comments = "italic",
+            conditionals = "italic",
+            functions = "bold",
+          },
+          inverse = {
+            visual = true,
+          },
+          modules = {
+            cmp = true,
+            fidget = true,
+            gitsigns = true,
+            lsp_trouble = true,
+            notify = true,
+            telescope = true,
+            treesitter_context = true,
+          },
+          darken = {
+            floats = true,
+            sidebars = {
+              enabled = true,
+              list = { "qf", "Outline" },
+            },
           },
         },
       }
-      vim.cmd.colorscheme "catppuccin"
+      vim.cmd.colorscheme "github_dark"
     end,
   },
 }
