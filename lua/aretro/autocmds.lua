@@ -24,11 +24,13 @@ au("BufReadPost", {
   group = grp,
 })
 
-au({ "BufWritePre" }, {
+au("BufWritePre", {
   group = grp,
   callback = function(ctx)
     local dir = vim.fn.fnamemodify(ctx.file, ":p:h")
-    vim.fn.mkdir(dir, "p")
+    if dir:find "%l+://" ~= 1 and vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, "p")
+    end
   end,
 })
 
