@@ -3,8 +3,8 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = false,
-    priority = 1000,
+    -- lazy = false,
+    -- priority = 1000,
     config = function()
       require("catppuccin").setup {
         transparent_background = transparent,
@@ -41,7 +41,7 @@ return {
           },
           dap = {
             enabled = true,
-            enable_ui = true, -- enable nvim-dap-ui
+            enable_ui = true,
           },
           telescope = true,
           treesitter = true,
@@ -54,9 +54,58 @@ return {
     end,
   },
   {
-    "projekt0n/github-nvim-theme",
+    "ellisonleao/gruvbox.nvim",
+    -- lazy = false,
+    -- priority = 1000,
+    config = function()
+      require("gruvbox").setup {
+        undercurl = true,
+        underline = true,
+        bold = true,
+        italic = {
+          strings = true,
+          comments = true,
+          operators = false,
+          folds = true,
+        },
+        strikethrough = true,
+        invert_intend_guides = false,
+        inverse = true,
+        contrast = "hard",
+        palette_overrides = {},
+        overrides = {},
+        dim_inactive = not transparent,
+        transparent_mode = transparent,
+      }
+      -- vim.cmd.colorscheme "gruvbox"
+    end,
+  },
+  {
+    "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
+    config = function()
+      require("kanagawa").setup {
+        compile = true,
+        undercurl = true,
+        commentStyle = { italic = true },
+        functionStyle = { bold = true },
+        transparent = transparent,
+        dimInactive = not transparent,
+        terminalColors = true,
+        theme = "wave",
+        background = {
+          dark = "wave",
+          light = "lotus",
+        },
+      }
+      vim.cmd.colorscheme "kanagawa"
+    end,
+  },
+  {
+    "projekt0n/github-nvim-theme",
+    -- lazy = false,
+    -- priority = 1000,
     config = function()
       require("github-theme").setup {
         options = {
@@ -88,7 +137,7 @@ return {
           },
         },
       }
-      vim.cmd.colorscheme "github_dark"
+      -- vim.cmd.colorscheme "github_dark"
     end,
   },
 }

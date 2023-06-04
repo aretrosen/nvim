@@ -478,6 +478,14 @@ return {
       -- nvim-metals
       local metals_config = require("metals").bare_config()
       metals_config.on_attach = custom_attach
+      metals_config.handlers = {
+        ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+          border = "rounded",
+        }),
+        ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+          border = "rounded",
+        }),
+      }
 
       metals_config.settings = {
         showImplicitArguments = true,
