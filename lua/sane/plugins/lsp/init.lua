@@ -34,6 +34,7 @@ return {
       "scalameta/nvim-metals",
       {
         "j-hui/fidget.nvim",
+        tag = "legacy",
         opts = {
           window = {
             blend = 10,
@@ -101,6 +102,16 @@ return {
         severity_sort = true,
         float = { border = "rounded", source = "always" },
       }
+
+      local map = vim.keymap.set
+      map(
+        "n",
+        "<leader>ld",
+        vim.diagnostic.open_float,
+        { silent = true, desc = "Line Diagnostics" }
+      )
+      map("n", "[d", vim.diagnostic.goto_prev, { silent = true, desc = "Previous Diagnostic" })
+      map("n", "]d", vim.diagnostic.goto_next, { silent = true, desc = "Next Diagnostic" })
 
       local lspcfg = require "lspconfig"
 
@@ -181,6 +192,11 @@ return {
       }
 
       lspcfg["elixirls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
+      lspcfg["emmet_ls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
@@ -320,7 +336,7 @@ return {
         capabilities = cmp_capabilities,
       }
 
-      lspcfg["pylyzer"].setup {
+      lspcfg["pyright"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }

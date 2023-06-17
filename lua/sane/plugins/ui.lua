@@ -1,6 +1,16 @@
 return {
   "nvim-tree/nvim-web-devicons",
   "MunifTanjim/nui.nvim",
+  -- {
+  --   "HampusHauffman/block.nvim",
+  --   event = "VeryLazy",
+  --   config = true,
+  -- },
+  {
+    "luukvbaal/statuscol.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
   {
     "b0o/incline.nvim",
     event = "VeryLazy",
@@ -117,5 +127,10 @@ return {
         },
       },
     },
+  },
+  {
+    "folke/edgy.nvim",
+    event = "VeryLazy",
+    opts = {},
   },
 }

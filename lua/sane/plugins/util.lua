@@ -6,10 +6,9 @@ return {
     keys = "ga",
   },
   {
-    "tzachar/local-highlight.nvim",
-    ft = { "python", "cpp", "c", "rust" },
-    event = "VeryLazy",
-    opts = { file_types = { "python", "cpp", "c", "rust" } },
+    "TobinPalmer/rayso.nvim",
+    cmd = { "Rayso" },
+    opts = {},
   },
   {
     "mbbill/undotree",

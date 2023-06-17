@@ -33,7 +33,7 @@ return {
             gs.next_hunk()
           end)
           return "<Ignore>"
-        end, { expr = true })
+        end, { expr = true, desc = "Git goto next hunk" })
 
         map("n", "[h", function()
           if vim.wo.diff then
@@ -43,7 +43,7 @@ return {
             gs.prev_hunk()
           end)
           return "<Ignore>"
-        end, { expr = true })
+        end, { expr = true, desc = "Git goto prev hunk" })
 
         -- Actions
         map("n", "<leader>sh", gs.stage_hunk)

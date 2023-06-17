@@ -161,13 +161,13 @@ return {
     end,
   },
   {
-    "stevearc/oil.nvim",
+    "aretrosen/oil.nvim",
     cmd = "Oil",
     keys = {
       {
         "<F2>",
         function()
-          require("oil").open_float()
+          require("oil").toggle_float()
         end,
         desc = "Oil File Explorer (cwd)",
       },
@@ -175,9 +175,20 @@ return {
     opts = {
       columns = {
         "icon",
-        "permissions",
       },
+      delete_to_trash = true,
+      trash_command = "trash-put",
       skip_confirm_for_simple_edits = true,
+      float = {
+        padding = 0,
+        max_width = 40,
+        anchor = "NE",
+        row = 0,
+        col = function()
+          return vim.o.columns
+        end,
+        zindex = 1200,
+      },
       view_options = {
         show_hidden = true,
         is_always_hidden = function(name, _)

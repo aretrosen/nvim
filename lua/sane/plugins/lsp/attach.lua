@@ -26,11 +26,15 @@ M.on_attach = function(client, bufnr)
     })
   end
 
+  local map = vim.keymap.set
+  local aug = vim.api.nvim_create_augroup
+  local acmd = vim.api.nvim_create_autocmd
+
   local buf_map = function(key, func, desc, opts)
     opts = opts or {}
     opts.mode = opts.mode or "n"
     if not opts.has or client.server_capabilities[opts.has .. "Provider"] then
-      vim.keymap.set(opts.mode, key, func, { silent = true, buffer = bufnr, desc = desc })
+      map(opts.mode, key, func, { silent = true, buffer = bufnr, desc = desc })
     end
   end
   buf_map("gD", vim.lsp.buf.declaration, "LSP Declaration")
@@ -51,15 +55,41 @@ M.on_attach = function(client, bufnr)
     "LSP Code Actions",
     { mode = { "n", "v" }, has = "codeAction" }
   )
-  vim.keymap.set("n", "<leader>rn", function()
+  map("n", "<leader>rn", function()
     return ":IncRename " .. vim.fn.expand "<cword>"
   end, {
     desc = "LSP Incremental Rename",
     expr = true,
     buffer = bufnr,
   })
-  buf_map("<leader>ld", vim.diagnostic.open_float, "Line Diagnostics")
-  buf_map("[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
-  buf_map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
+
+  if client.server_capabilities.documentHighlightProvider then
+    local agdh = aug("LSPDocumentHighlight." .. bufnr, {})
+    acmd("CursorHold", {
+      callback = vim.lsp.buf.document_highlight,
+      buffer = bufnr,
+      group = agdh,
+    })
+    acmd("CursorMoved", {
+      callback = vim.lsp.buf.clear_references,
+      buffer = bufnr,
+      group = agdh,
+    })
+  end
+
+  if false and client.server_capabilities.codeLensProvider then
+    local agcl = aug("LSPCodeLens." .. bufnr, {})
+    acmd("BufEnter", {
+      callback = vim.lsp.codelens.refresh,
+      buffer = bufnr,
+      once = true,
+      group = agcl,
+    })
+    acmd({ "BufWritePost", "CursorHold" }, {
+      callback = vim.lsp.codelens.refresh,
+      buffer = bufnr,
+      group = agcl,
+    })
+  end
 end
 return M

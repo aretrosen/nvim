@@ -187,7 +187,7 @@ return {
   },
   {
     "altermo/ultimate-autopair.nvim",
-    event = { "InsertEnter", "CmdlineEnter" },
+    event = "InsertEnter",
     config = true,
   },
 }

@@ -82,8 +82,8 @@ return {
   },
   {
     "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
+    -- lazy = false,
+    -- priority = 1000,
     config = function()
       require("kanagawa").setup {
         compile = true,
@@ -99,7 +99,29 @@ return {
           light = "lotus",
         },
       }
-      vim.cmd.colorscheme "kanagawa"
+      -- vim.cmd.colorscheme "kanagawa"
+    end,
+  },
+  {
+    "ribru17/bamboo.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("bamboo").setup {
+        style = "vulgaris",
+        transparent = transparent,
+        code_style = {
+          comments = "italic",
+          keywords = "none",
+          functions = "bold",
+          strings = "none",
+          variables = "none",
+        },
+        lualine = {
+          transparent = transparent,
+        },
+      }
+      require("bamboo").load()
     end,
   },
   {

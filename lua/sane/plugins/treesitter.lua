@@ -3,25 +3,12 @@ return {
   "HiPhish/nvim-ts-rainbow2",
   {
     "windwp/nvim-ts-autotag",
-    config = true,
     event = "BufReadPost",
-    ft = {
-      "html",
-      "javascript",
-      "typescript",
-      "javascriptreact",
-      "typescriptreact",
-      "svelte",
-      "vue",
-      "tsx",
-      "jsx",
-      "rescript",
-      "xml",
-      "php",
-      "markdown",
-      "glimmer",
-      "handlebars",
-      "hbs",
+    opts = {
+      autotag = {
+        enable = true,
+        filetypes = { "html", "xml", "markdown" },
+      },
     },
   },
   { "nvim-treesitter/playground", cmd = "TSPlaygroundToggle" },
@@ -140,6 +127,10 @@ return {
           enable = true,
           use_languagetree = true,
           additional_vim_regex_highlighting = false,
+        },
+        matchup = {
+          enable = true,
+          enable_quotes = true,
         },
         incremental_selection = {
           enable = true,
