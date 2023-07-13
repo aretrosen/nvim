@@ -8,7 +8,9 @@ return {
   {
     "TobinPalmer/rayso.nvim",
     cmd = { "Rayso" },
-    opts = {},
+    opts = {
+      open_cmd = "firefox-developer-edition",
+    },
   },
   {
     "mbbill/undotree",
@@ -40,19 +42,6 @@ return {
     end,
   },
   {
-    "cshuaimin/ssr.nvim",
-    keys = {
-      {
-        "<leader>sr",
-        function()
-          require("ssr").open()
-        end,
-        mode = { "n", "x" },
-        desc = "Structural Replace",
-      },
-    },
-  },
-  {
     "folke/persistence.nvim",
     event = "BufReadPre",
     opts = { options = { "buffers", "curdir", "tabpages", "winsize", "help" } },
@@ -81,11 +70,18 @@ return {
     },
   },
   {
-    "RaafatTurki/hex.nvim",
-    cmd = { "HexDump", "HexAssemble", "HexToggle" },
-    config = true,
+    "p00f/godbolt.nvim",
+    cmd = { "Godbolt", "GodboltCompiler" },
+    opts = {
+      languages = {
+        cpp = { compiler = "gsnapshot", options = { "-O3 -Wall -Wextra" } },
+      },
+      quickfix = {
+        enable = true,
+        auto_open = true,
+      },
+    },
   },
-  { "krady21/compiler-explorer.nvim", cmd = "CECompile" },
   {
     "junegunn/vim-easy-align",
     event = "VeryLazy",
@@ -97,6 +93,11 @@ return {
   {
     dir = "~/.config/nvim/lua_plugins/sudowrite.nvim",
     event = "VeryLazy",
+    config = true,
+  },
+  {
+    "tomiis4/Hypersonic.nvim",
+    cmd = "Hypersonic",
     config = true,
   },
 }

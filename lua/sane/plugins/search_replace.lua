@@ -5,11 +5,26 @@ return {
     config = true,
   },
   {
-    "jinh0/eyeliner.nvim",
-    keys = { "f", "t", "F", "T" },
-    opts = {
-      highlight_on_key = true,
-      dim = true,
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    config = true,
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
     },
   },
   {

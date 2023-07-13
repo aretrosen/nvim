@@ -49,47 +49,4 @@ return {
     "ojroques/nvim-osc52",
     event = "VeryLazy",
   },
-  {
-    "lewis6991/foldsigns.nvim",
-    event = "VeryLazy",
-    config = true,
-  },
-  {
-    "akinsho/toggleterm.nvim",
-    cmd = {
-      "ToggleTerm",
-      "TermExec",
-      "ToggleTermSendVisualLines",
-      "Gitui",
-    },
-    keys = {
-      "<A-t>",
-      {
-        [[\]],
-        [[<cmd>ToggleTermSendVisualLines<cr>]],
-        mode = "v",
-      },
-    },
-    config = function()
-      require("toggleterm").setup {
-        open_mapping = "<A-t>",
-        float_opts = {
-          border = "curved",
-        },
-        winbar = {
-          enabled = true,
-        },
-      }
-      local Terminal = require("toggleterm.terminal").Terminal
-      local gitui = Terminal:new {
-        cmd = "gitui",
-        direction = "float",
-        hidden = true,
-      }
-
-      vim.api.nvim_create_user_command("Gitui", function()
-        gitui:toggle()
-      end, { desc = "Open Gitui" })
-    end,
-  },
 }

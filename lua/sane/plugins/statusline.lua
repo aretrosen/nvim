@@ -3,8 +3,6 @@ return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     config = function()
-      local noice = require "noice"
-
       local mode_to_sgn = {
         ["NORMAL"] = "ℕ",
         ["VISUAL"] = "∨",
@@ -94,11 +92,7 @@ return {
             },
           },
           lualine_x = {
-            {
-              noice.api.status.search.get,
-              cond = noice.api.status.search.has,
-              color = { fg = "#89DCEB" },
-            },
+            "searchcount",
           },
           lualine_y = {
             "encoding",
@@ -115,7 +109,7 @@ return {
             },
           },
         },
-        extensions = { "neo-tree", "symbols-outline" },
+        extensions = {},
       }
     end,
   },

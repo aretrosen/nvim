@@ -151,19 +151,6 @@ return {
           },
         }),
       })
-      cmp.setup.filetype("lua", {
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-        }, {
-          { name = "luasnip" },
-        }, {
-          { name = "buffer" },
-        }, {
-          { name = "path" },
-        }, {
-          { name = "lua-latex-symbols", option = { cache = true } },
-        }),
-      })
 
       vim.api.nvim_create_autocmd("BufReadPost", {
         group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),

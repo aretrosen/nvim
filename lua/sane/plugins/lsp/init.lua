@@ -6,7 +6,7 @@ if ok then
   perlversion = fn.fnamemodify(perlprefix, ":t")
 end
 
-local diag_ico = {
+local diag_icons = {
   Error = " ",
   Warn = " ",
   Hint = "󰌵 ",
@@ -23,14 +23,14 @@ return {
         "folke/neodev.nvim",
         config = true,
       },
-      { "smjonas/inc-rename.nvim", cmd = "IncRename", config = true },
+      { "smjonas/inc-rename.nvim", cmd = "IncRename", opts = { input_buffer_type = "dressing" } },
       "mason.nvim",
       "clangd_extensions.nvim",
       "rust-tools.nvim",
       "b0o/SchemaStore.nvim",
       "barreiroleo/ltex-extra.nvim",
       "yaml-companion.nvim",
-      "typescript.nvim",
+      "typescript-tools.nvim",
       "scalameta/nvim-metals",
       {
         "j-hui/fidget.nvim",
@@ -88,7 +88,7 @@ return {
 
       local custom_attach = require("sane.plugins.lsp.attach").on_attach
 
-      for name, icon in pairs(diag_ico) do
+      for name, icon in pairs(diag_icons) do
         name = "DiagnosticSign" .. name
         fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
@@ -155,10 +155,12 @@ return {
           settings = {
             cmd = {
               "clangd",
-              "--completion-style=detailed",
               "--background-index",
               "--clang-tidy",
               "--header-insertion=iwyu",
+              "--completion-style=detailed",
+              "--function-arg-placeholders",
+              "--fallback-style=google",
             },
           },
         },
@@ -186,17 +188,17 @@ return {
         },
       }
 
+      lspcfg["docker_compose_language_service"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+      }
+
       lspcfg["dockerls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
 
       lspcfg["elixirls"].setup {
-        on_attach = custom_attach,
-        capabilities = cmp_capabilities,
-      }
-
-      lspcfg["emmet_ls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
       }
@@ -224,6 +226,18 @@ return {
         },
       }
 
+      lspcfg["fortls"].setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
+        cmd = {
+          "fortls",
+          "--lowercase_intrisics",
+          "--hover_signature",
+          "--hover_language=fortran",
+          "--use_signature_help",
+        },
+      }
+
       lspcfg["gopls"].setup {
         on_attach = custom_attach,
         capabilities = cmp_capabilities,
@@ -234,11 +248,34 @@ return {
           gopls = {
             allExperiments = true,
             gofumpt = true,
+            semanticTokens = true,
             analyses = {
               unusedparams = true,
+              unusedwrite = true,
+              unusedvariable = true,
               fieldalignment = true,
               nilness = true,
               shadow = true,
+              useany = true,
+            },
+            hints = {
+              assignVariableTypes = true,
+              compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = true,
+              functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
+            },
+            codelenses = {
+              gc_details = false,
+              generate = true,
+              regenerate_cgo = true,
+              run_govulncheck = true,
+              test = true,
+              tidy = true,
+              upgrade_dependency = true,
+              vendor = true,
             },
             staticcheck = true,
           },
@@ -256,6 +293,7 @@ return {
         settings = {
           json = {
             schemas = require("schemastore").json.schemas(),
+            format = { enable = true },
             validate = { enable = true },
           },
         },
@@ -448,25 +486,9 @@ return {
         },
       }
 
-      require("typescript").setup {
-        server = {
-          on_attach = function(client, bufnr)
-            vim.keymap.set(
-              "n",
-              "<leader>co",
-              "TypescriptOrganizeImports",
-              { buffer = bufnr, desc = "Organize Imports" }
-            )
-            vim.keymap.set(
-              "n",
-              "<leader>cR",
-              "TypescriptRenameFile",
-              { desc = "Rename File", buffer = bufnr }
-            )
-            custom_attach(client, bufnr)
-          end,
-          capabilities = cmp_capabilities,
-        },
+      require("typescript-tools").setup {
+        on_attach = custom_attach,
+        capabilities = cmp_capabilities,
       }
 
       lspcfg["verible"].setup {
@@ -483,6 +505,13 @@ return {
         lspconfig = {
           on_attach = custom_attach,
           capabilities = cmp_capabilities,
+          settings = {
+            yaml = {
+              schemas = {
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+              },
+            },
+          },
         },
       })
 
@@ -505,7 +534,6 @@ return {
 
       metals_config.settings = {
         showImplicitArguments = true,
-        -- excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
       }
 
       vim.api.nvim_create_autocmd("FileType", {
@@ -527,7 +555,6 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "mason.nvim",
-      "typescript.nvim",
     },
     config = function()
       local nls = require "null-ls"
@@ -543,8 +570,8 @@ return {
           nls.builtins.code_actions.shellcheck,
           nls.builtins.diagnostics.shellcheck,
           nls.builtins.formatting.shfmt,
+          nls.builtins.diagnostics.hadolint,
           nls.builtins.formatting.stylua,
-          require "typescript.extensions.null-ls.code-actions",
         },
       }
     end,
@@ -567,13 +594,17 @@ return {
     opts = { use_diagnostic_signs = true },
   },
   {
-    dir = "~/.config/nvim/lua_plugins/lightbulb.nvim",
+    -- dir = "~/.config/nvim/lua_plugins/lightbulb.nvim",
+    "kosayoda/nvim-lightbulb",
     event = "VeryLazy",
     config = true,
   },
   "simrat39/rust-tools.nvim",
   "p00f/clangd_extensions.nvim",
-  "jose-elias-alvarez/typescript.nvim",
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "plenary.nvim" },
+  },
   {
     "saecki/crates.nvim",
     event = { "BufReadPost Cargo.toml" },

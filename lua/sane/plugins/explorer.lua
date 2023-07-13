@@ -161,7 +161,7 @@ return {
     end,
   },
   {
-    "aretrosen/oil.nvim",
+    "stevearc/oil.nvim",
     cmd = "Oil",
     keys = {
       {
@@ -182,12 +182,10 @@ return {
       float = {
         padding = 0,
         max_width = 40,
-        anchor = "NE",
-        row = 0,
-        col = function()
-          return vim.o.columns
+        override = function(conf)
+          conf["col"] = vim.o.columns - conf.width
+          conf["zindex"] = 80
         end,
-        zindex = 1200,
       },
       view_options = {
         show_hidden = true,

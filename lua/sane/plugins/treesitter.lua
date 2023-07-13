@@ -18,21 +18,6 @@ return {
     config = true,
   },
   {
-    "mfussenegger/nvim-treehopper",
-    keys = {
-      {
-        "m",
-        [[:<C-U>lua require('tsht').nodes()<CR>]],
-        mode = "o",
-      },
-      {
-        "m",
-        [[:lua require('tsht').nodes()<CR>]],
-        mode = "x",
-      },
-    },
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     dependencies = {
@@ -179,10 +164,10 @@ return {
               ["[]"] = "@class.outer",
             },
             goto_next = {
-              ["]d"] = "@conditional.outer",
+              ["]c"] = "@conditional.outer",
             },
             goto_previous = {
-              ["[d"] = "@conditional.outer",
+              ["[c"] = "@conditional.outer",
             },
           },
           select = {
@@ -202,6 +187,10 @@ return {
       local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
       vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
       vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+      vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+      vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+      vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+      vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
     end,
   },
   {
@@ -235,55 +224,5 @@ return {
       },
     },
     config = true,
-  },
-  {
-    "simrat39/symbols-outline.nvim",
-    keys = { { "<F4>", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
-    config = true,
-  },
-  {
-    "ckolkey/ts-node-action",
-    dependencies = { "nvim-treesitter" },
-    keys = {
-      {
-        "<leader>cc",
-        function()
-          local action = require("ts-node-action.actions").cycle_case()[1][1]
-          local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
-          vim.lsp.buf.rename(action(node))
-        end,
-        desc = "Apply cycle_case node action via LSP Rename",
-      },
-    },
-    config = true,
-  },
-  {
-    "bennypowers/nvim-regexplainer",
-    dependencies = { "nui.nvim" },
-    keys = "gE",
-    opts = {
-      mappings = {
-        toggle = "gE",
-      },
-      -- filetypes (i.e. extensions) in which to run the autocommand
-      filetypes = {
-        "html",
-        "js",
-        "cjs",
-        "mjs",
-        "ts",
-        "jsx",
-        "tsx",
-        "cjsx",
-        "mjsx",
-        "rs",
-        "c",
-        "cc",
-        "cpp",
-        "h",
-        "pl",
-        "lua",
-      },
-    },
   },
 }

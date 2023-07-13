@@ -77,6 +77,24 @@ M.on_attach = function(client, bufnr)
     })
   end
 
+  if client.server_capabilities.inlayHintProvider then
+    local agih = aug("LSPInlayHint." .. bufnr, {})
+    acmd("InsertEnter", {
+      callback = function()
+        vim.lsp.inlay_hint(bufnr, true)
+      end,
+      buffer = bufnr,
+      group = agih,
+    })
+    acmd("InsertLeave", {
+      callback = function()
+        vim.lsp.inlay_hint(bufnr, false)
+      end,
+      buffer = bufnr,
+      group = agih,
+    })
+  end
+
   if false and client.server_capabilities.codeLensProvider then
     local agcl = aug("LSPCodeLens." .. bufnr, {})
     acmd("BufEnter", {
@@ -90,6 +108,20 @@ M.on_attach = function(client, bufnr)
       buffer = bufnr,
       group = agcl,
     })
+  end
+
+  -- language specific options
+  if client.name == "ruff_lsp" then
+    client.server_capabilities.hoverProvider = false
+  end
+
+  if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
+    local semantic = client.config.capabilities.textDocument.semanticTokens
+    client.server_capabilities.semanticTokensProvider = {
+      full = true,
+      legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
+      range = true,
+    }
   end
 end
 return M

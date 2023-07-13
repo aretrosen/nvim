@@ -36,7 +36,7 @@ o.scrolloff = 15
 o.sessionoptions = { "buffers", "curdir", "tabpages", "winpos", "winsize" }
 o.shada = [[!,'50,<50,s100,h]]
 o.shiftround = true
-o.shortmess:append { W = true, I = true, c = true, C = true }
+o.shortmess:append { W = true, I = true, c = true, C = true, o = true }
 o.showbreak = "↪ "
 o.showmode = false
 o.sidescrolloff = 5
