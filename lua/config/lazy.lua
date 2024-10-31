@@ -20,6 +20,9 @@ require("lazy").setup({
 	install = {
 		colorscheme = { "default" },
 	},
+	diff = {
+		cmd = "diffview.nvim",
+	},
 	custom_keys = {
 		["<localleader>l"] = false,
 	},

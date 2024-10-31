@@ -1,7 +1,7 @@
 local create_autocmd = vim.api.nvim_create_autocmd
 local create_augroup = vim.api.nvim_create_augroup
 
--- check if file has changed externally, and reflect changes
+-- Check if file has changed externally, and reflect changes
 create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	group = create_augroup("_checktime", { clear = true }),
 	callback = function()
@@ -11,7 +11,7 @@ create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	end,
 })
 
--- highlight text a little longer
+-- Highlight text a little longer
 create_autocmd("TextYankPost", {
 	group = create_augroup("_highlight_yank", { clear = true }),
 	callback = function()
@@ -19,7 +19,7 @@ create_autocmd("TextYankPost", {
 	end,
 })
 
--- if window resized, resize splits to equal size
+-- If window resized, resize splits to equal size
 create_autocmd({ "VimResized" }, {
 	group = create_augroup("_resize_splits", { clear = true }),
 	callback = function()
@@ -29,7 +29,7 @@ create_autocmd({ "VimResized" }, {
 	end,
 })
 
--- go to last location before closing when opening a buffer
+-- Go to last location before closing when opening a buffer
 create_autocmd("BufReadPost", {
 	group = create_augroup("_last_loc", { clear = true }),
 	callback = function(event)
@@ -47,7 +47,7 @@ create_autocmd("BufReadPost", {
 	end,
 })
 
--- close some filetypes with just q, like emacs
+-- Close some filetypes with just q, like emacs
 create_autocmd("FileType", {
 	group = create_augroup("_close_with_q", { clear = true }),
 	pattern = {
@@ -70,7 +70,7 @@ create_autocmd("FileType", {
 	end,
 })
 
--- auto create directories for a file, like mkdir -p
+-- Auto create directories for a file, like mkdir -p
 create_autocmd({ "BufWritePre" }, {
 	group = create_augroup("_auto_create_dir", { clear = true }),
 	callback = function(event)

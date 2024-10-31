@@ -45,7 +45,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
-		dependencies = "b0o/SchemaStore.nvim",
+		dependencies = { "b0o/SchemaStore.nvim", "blink.cmp" },
 		keys = {
 			{ "[d", vim.diagnostic.goto_prev, desc = "Previous Diagnostics" },
 			{ "]d", vim.diagnostic.goto_next, desc = "Next Diagnostics" },
@@ -296,12 +296,12 @@ return {
 				},
 			})
 
-			local cmp_nvim_lsp = require("cmp_nvim_lsp")
+			-- local cmp_nvim_lsp = require("cmp_nvim_lsp")
 			local capabilities = vim.tbl_deep_extend(
 				"force",
 				{},
 				vim.lsp.protocol.make_client_capabilities(),
-				cmp_nvim_lsp.default_capabilities(),
+				require("blink.cmp").get_lsp_capabilities(),
 				opts.capabilities
 			)
 
@@ -356,9 +356,9 @@ return {
 		opts = {
 			server = {
 				on_attach = function(client, bufnr)
-					vim.keymap.set("n", "<leader>cR", function()
-						vim.cmd.RustLsp("codeAction")
-					end, { desc = "Code Action", buffer = bufnr })
+					-- vim.keymap.set("n", "<leader>cR", function()
+					-- 	vim.cmd.RustLsp("codeAction")
+					-- end, { desc = "Code Action", buffer = bufnr })
 					vim.keymap.set("n", "<leader>dr", function()
 						vim.cmd.RustLsp("debuggables")
 					end, { desc = "Rust Debuggables", buffer = bufnr })

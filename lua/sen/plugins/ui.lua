@@ -58,18 +58,6 @@ return {
 				dadbod_ui = true,
 				which_key = true,
 			},
-			custom_highlights = function(C)
-				local cmpfn = require("catppuccin.groups.integrations.cmp")
-				setfenv(cmpfn.get, { C = C })
-				local cmp = cmpfn.get()
-				for k, v in pairs(cmp) do
-					if k:sub(8, 11) == "Kind" then
-						cmp[k] = { bg = v.fg, fg = C.base }
-					end
-				end
-				cmp["Folded"] = { bg = C.crust }
-				return cmp
-			end,
 		},
 		config = function(_, opts)
 			require("catppuccin").setup(opts)
@@ -147,10 +135,12 @@ return {
 	{
 		"stevearc/dressing.nvim",
 		init = function()
+			---@diagnostic disable-next-line: duplicate-set-field
 			vim.ui.select = function(...)
 				require("lazy").load({ plugins = { "dressing.nvim" } })
 				return vim.ui.select(...)
 			end
+			---@diagnostic disable-next-line: duplicate-set-field
 			vim.ui.input = function(...)
 				require("lazy").load({ plugins = { "dressing.nvim" } })
 				return vim.ui.input(...)
@@ -201,12 +191,27 @@ return {
 		},
 	},
 	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "Avante" },
-		opts = {
-			file_types = { "markdown", "Avante" },
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewOpen", "DiffviewClose" },
+		opts = {},
+	},
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"plenary.nvim",
+			"fzf-lua",
+			"diffview.nvim",
 		},
+		cmd = { "Neogit" },
+		opts = {},
+	},
+	{
+		"OXY2DEV/markview.nvim",
+		ft = { "markdown", "Avante" },
 		dependencies = { "nvim-treesitter", "mini.icons" },
+		opts = {
+			hybrid_modes = { "n" },
+		},
 	},
 	{
 		"HiPhish/rainbow-delimiters.nvim",
