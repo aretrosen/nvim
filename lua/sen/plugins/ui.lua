@@ -1,3 +1,7 @@
+if vim.g.vscode then
+	return {}
+end
+
 return {
 	{
 		"catppuccin/nvim",
@@ -24,7 +28,7 @@ return {
 					enabled = true,
 					indentscope_color = "", -- catppuccin color (eg. `lavender`) Default: text
 				},
-				cmp = true,
+				blink_cmp = true,
 				dap = true,
 				dap_ui = true,
 				native_lsp = {
@@ -53,9 +57,7 @@ return {
 				treesitter_context = true,
 				treesitter = true,
 				rainbow_delimiters = true,
-				render_markdown = true,
 				lsp_trouble = true,
-				dadbod_ui = true,
 				which_key = true,
 			},
 		},
@@ -210,7 +212,7 @@ return {
 		ft = { "markdown", "Avante" },
 		dependencies = { "nvim-treesitter", "mini.icons" },
 		opts = {
-			hybrid_modes = { "n" },
+			-- hybrid_modes = { "n" },
 		},
 	},
 	{

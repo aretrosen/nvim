@@ -1,8 +1,3 @@
--- Set global variable if env is VSCODE
-if vim.env.VSCODE then
-	vim.g.vscode = true
-end
-
 -- Faster loading time
 if vim.loader then
 	vim.loader.enable()

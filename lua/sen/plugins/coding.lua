@@ -1,3 +1,7 @@
+if vim.g.vscode then
+	return {}
+end
+
 return {
 	{
 		"saghen/blink.cmp",
@@ -50,9 +54,9 @@ return {
 				documentation = {
 					border = "rounded",
 				},
-				ghost_text = {
-					enabled = true,
-				},
+				-- ghost_text = {
+				-- 	enabled = true,
+				-- },
 				signature_help = {
 					border = "rounded",
 				},
@@ -127,7 +131,6 @@ return {
 	{
 		"yetone/avante.nvim",
 		event = "VeryLazy",
-		enabled = false,
 		opts = {
 			-- add any opts here
 		},
@@ -139,122 +142,5 @@ return {
 			"MunifTanjim/nui.nvim",
 			"img-clip.nvim",
 		},
-	},
-	{
-		"hrsh7th/nvim-cmp",
-		event = { "InsertEnter", "CmdlineEnter" },
-		enabled = false,
-		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-emoji",
-			"amarakon/nvim-cmp-lua-latex-symbols",
-			"https://codeberg.org/FelipeLema/cmp-async-path",
-			{ "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
-			"saadparwaiz1/cmp_luasnip",
-			"roobert/tailwindcss-colorizer-cmp.nvim",
-		},
-		opts = function()
-			vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			local defaults = require("cmp.config.default")()
-
-			cmp.setup.cmdline({ "/", "?" }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = {
-					{ name = "buffer" },
-				},
-			})
-
-			cmp.setup.cmdline(":", {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = "async_path" },
-				}, {
-					{
-						name = "cmdline",
-						option = {
-							ignore_cmds = { "Man", "!" },
-						},
-					},
-				}),
-			})
-
-			return {
-				auto_brackets = { "python" }, -- configure any filetype to auto add brackets
-				snippet = {
-					expand = function(item)
-						require("luasnip").lsp_expand(item.body)
-					end,
-				},
-				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-					["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<CR>"] = cmp.mapping.confirm({ select = false }),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.locally_jumpable(1) then
-							luasnip.jump(1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-				}),
-				sources = cmp.config.sources({
-					{ name = "luasnip" },
-					{ name = "lazydev" },
-				}, {
-					{ name = "nvim_lsp" },
-					{ name = "async_path" },
-				}, {
-					{ name = "buffer" },
-				}, {
-					{ name = "lua-latex-symbols", option = { cache = true } },
-					{ name = "emoji" },
-				}),
-				formatting = {
-					fields = { "kind", "abbr", "menu" },
-					format = function(entry, item)
-						item = require("tailwindcss-colorizer-cmp").formatter(entry, item)
-						item.kind = " " .. MiniIcons.get("lsp", item.kind) .. " "
-						item.menu = ({
-							cmdline = "(cmd)",
-							buffer = "(buffer)",
-							nvim_lsp = "(lsp)",
-							luasnip = "(snippet)",
-							latex_symbols = "(latex)",
-							async_path = "(path)",
-							emoji = "(emoji)",
-						})[entry.source.name] or ""
-						return item
-					end,
-				},
-				experimental = {
-					ghost_text = {
-						hl_group = "CmpGhostText",
-					},
-				},
-				sorting = defaults.sorting,
-			}
-		end,
 	},
 }

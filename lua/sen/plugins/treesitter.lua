@@ -6,6 +6,18 @@ local disable_treesitter = function(_, buf)
 	end
 end
 
+if vim.g.vscode then
+	return {
+		{
+			"andymass/vim-matchup",
+			event = "BufReadPost",
+			config = function()
+				vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+			end,
+		},
+	}
+end
+
 return {
 	{
 		"windwp/nvim-ts-autotag",
